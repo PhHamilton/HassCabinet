@@ -1,8 +1,0 @@
-
-class IMenuOptions: 
-    def MenuText(self, text: str) -> str: 
-        # Will contain the name of the function
-        pass 
-    def Clicked(self): 
-        # Function that defines what happens when the option is chosen
-        pass
