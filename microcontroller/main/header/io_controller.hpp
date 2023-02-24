@@ -1,0 +1,30 @@
+#ifndef __io_controller__
+#define __io_controller__
+
+#include "Arduino.h"
+
+typedef struct
+{
+	uint8_t *DDR = 0x24;
+	uint8_t *PORT = 0x25; 
+	uint8_t *PIN = 0x23; 
+	uint8_t BIT = 0x05; 
+}io_information;
+
+class IOController
+{
+	public: 
+		IOController(io_information ioInfo);
+		void Initialize(); 
+		void TurnOn(void); 
+		void TurnOff(void); 
+		void Toggle(void); 
+		uint8_t GetState(void); 
+
+	private: 
+		io_information _ioInfo;
+		uint8_t _isInitialized;
+		uint8_t _state;  
+};
+
+#endif
