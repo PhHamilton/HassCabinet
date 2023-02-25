@@ -11,10 +11,10 @@ typedef struct
 	uint8_t BIT = 0x05; 
 }io_information;
 
-class IOController
+class DigitalIOController
 {
 	public: 
-		IOController(io_information ioInfo);
+		DigitalIOController(io_information ioInfo);
 		void Initialize(); 
 		void TurnOn(void); 
 		void TurnOff(void); 
