@@ -154,3 +154,10 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ignoring build files
+microcontroller/main/obj/
+
+# Ignore executable
+*.exe
+*.elf
