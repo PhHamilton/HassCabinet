@@ -3,6 +3,8 @@
 #include "settings.hpp"
 #include <stdint.h>
 
+#define BAUDRATE 9600
+
 /*
 	Message type: Hex 
 	Last four bytes indicates the status of the relay 
@@ -15,14 +17,32 @@
 
 */
 
+enum MessageType
+{
+	UNKNOWN,
+	UPDATE_SETTINGS,
+	CHANGE_OUTPUT,
+	REQUEST_TEMPERATURE
+};
+
+enum MessageSequence
+{
+	IDLE,
+	MESSAGE_TYPE,
+	MESSAGE
+};
+
 class UartHandler
 {
 	public: 
 		UartHandler(void);
 		void Initialize(); 
-		uint8_t NewMessageAvailable(void); 
+		uint8_t MessageAvailable(void); 
+		MessageType GetMessageType(uint8_t messageType); 
 		uint8_t GetMessage(void); 
 	private: 
+		MessageType _messageType; 
+		uint8_t _message; 
 
 
 }; 

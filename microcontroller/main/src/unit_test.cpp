@@ -38,8 +38,6 @@ void test_settings_handler_UpdateSettings(void)
 
 	SettingsHandler settings;
 	
-	
-
 	uint16_t settingsMsg[4] = {0x1B50, 0x2E20, 0x4000, 0x8F70};
 	uint8_t ExpectedLoggingFrequency[4] = {2, 3, 0, 3}; 
 	uint8_t ExpectedEnableLogging[4] = {1, 1, 0, 1}; 
