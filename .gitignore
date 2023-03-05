@@ -161,3 +161,4 @@ microcontroller/main/obj/
 # Ignore executable
 *.exe
 *.elf
+*.out
