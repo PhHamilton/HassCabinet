@@ -26,7 +26,7 @@
 
 #ifndef ACUTEST_H
 #define ACUTEST_H
-//#define TEST_NO_MAIN
+
 
 /************************
  *** Public interface ***
@@ -1837,4 +1837,3 @@ main(int argc, char** argv)
 #endif
 
 #endif  /* #ifndef ACUTEST_H */
-
