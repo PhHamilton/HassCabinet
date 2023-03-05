@@ -37,91 +37,74 @@ void test_settings_handler_UpdateSettings(void)
 {
 
 	SettingsHandler settings;
-	uint16_t settingsMsg; 
-	uint8_t settingsVal;
-	uint8_t Expected;
+	
+	
+
+	uint16_t settingsMsg[4] = {0x1B50, 0x2E20, 0x4000, 0x8F70};
+	uint8_t ExpectedLoggingFrequency[4] = {2, 3, 0, 3}; 
+	uint8_t ExpectedEnableLogging[4] = {1, 1, 0, 1}; 
+	uint8_t ExpectedEnableFanController[4] = {1, 0, 0, 1}; 
+	uint8_t ExpectedBlinkFrequency[4] = {1, 0, 0, 1}; 
+	uint8_t ExpectedForceOn[4] = {0, 1, 0, 1}; 
+	uint8_t ExpectedEnableLed[4] = {1, 0, 0, 1}; 
+
+	for(int i = 0; i < 4; i++)
+	{
+		settings.UpdateSettings(settingsMsg[i]); 
+		
+		TEST_CHECK_(settings.GetLoggingFrequency() == ExpectedLoggingFrequency[i], "Testing GetLoggingFrequency(%i): Expected : %d, actual %d", i, ExpectedLoggingFrequency[i], settings.GetLoggingFrequency());
+		TEST_CHECK_(settings.GetLoggingStatus() == ExpectedEnableLogging[i], "Testing GetLoggingStatus(%i): Expected : %d, actual %d", i, ExpectedEnableLogging[i], settings.GetLoggingStatus());
+		TEST_CHECK_(settings.GetFanController() == ExpectedEnableFanController[i], "Testing GetFanController(%i): Expected : %d, actual %d",i,  ExpectedEnableFanController[i], settings.GetFanController());
+		TEST_CHECK_(settings.GetBlinkFrequency(i) == ExpectedBlinkFrequency[i], "Testing GetBlinkFrequency(%i): Expected : %d, actual %d",i,  ExpectedBlinkFrequency[i], settings.GetBlinkFrequency(i));
+		TEST_CHECK_(settings.IsForced(i) == ExpectedForceOn[i], "Testing IsForced(%i): Expected : %d, actual %d",i,  ExpectedForceOn[i], settings.IsForced(i));
+		TEST_CHECK_(settings.IsEnabled(i) == ExpectedEnableLed[i], "Testing IsEnabled(%i): Expected : %d, actual %d",i,  ExpectedEnableLed[i], settings.IsEnabled(i));
+	}
 	/*
 		* Settings: 
 			Output: 1 
-			
 				Logging Frequency: 2 Hz
 				Enable Logging: 1 
 				Enable Fan Controller: 1
 				
-
 				Blink: 1 Hz
 				Force on: 0 
 				Enable Led: 1 
 				
-
 				0001 1011 0101 0000  
 
 			Output: 2 
-
 				Logging Frequency: 3 Hz
 				Enable Logging: 1 
 				Enable Fan Controller: 0
 				
-
 				Blink: 0 Hz
 				Force on: 1 
 				Enable Led: 0 
 			
-
 			0010 1110 0010 0000  
 
 			Output: 3
-			
 				Logging Frequency: 0 Hz
 				Enable Logging: 0 
 				Enable Fan Controller: 0
-				
 
 				Blink: 0 Hz
 				Force on: 0 
 				Enable Led: 0 
 				
-
 				0100 0000 0000 0000  
 
 			Output: 4 
-
 				Logging Frequency: 3 Hz
 				Enable Logging: 1 
 				Enable Fan Controller: 1
 				
-
 				Blink: 1 Hz
 				Force on: 1 
 				Enable Led: 1 
-			
-
-			100 1110 0111 0000
+		
+				1000 1111 0111 0000
 	*/ 
-	settingsMsg = 0x1B50; 
-	settings.UpdateSettings(settingsMsg); 
-	settingsVal = settings.GetOutputSettings(0); 
-	Expected = 0xB5; 
-	TEST_CHECK_(settingsVal == Expected, "Testing GetOutputSettings(0): Expected :%d, actual %d", Expected, settingsVal);
-
-	settingsMsg = 0x2E20;
-	settings.UpdateSettings(settingsMsg); 
-	settingsVal = settings.GetOutputSettings(1); 
-	Expected = 0xE2; 
-	TEST_CHECK_(settingsVal == Expected, "Testing GetOutputSettings(1): Expected :%d, actual %d", Expected, settingsVal);
-
-	settingsMsg = 0x4000;
-	settings.UpdateSettings(settingsMsg); 
-	settingsVal = settings.GetOutputSettings(2); 
-	Expected = 0x00; 
-	TEST_CHECK_(settingsVal == Expected, "Testing GetOutputSettings(2): Expected :%d, actual %d", Expected, settingsVal);
-
-	settingsMsg = 0x8E70;
-	settings.UpdateSettings(settingsMsg); 
-	settingsVal = settings.GetOutputSettings(3); 
-	Expected = 0xE7; 
-	TEST_CHECK_(settingsVal == Expected, "Testing GetOutputSettings(3): Expected :%d, actual %d", Expected, settingsVal);
-
 }
 
 

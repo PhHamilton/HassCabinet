@@ -8,7 +8,6 @@
 
 typedef struct
 {
-
 	struct 
 	{
 		uint8_t forceOn;
@@ -16,7 +15,6 @@ typedef struct
 		uint8_t blinkFrequency;   
 
 	} LedStatusSetting[NUMBER_OF_OUTPUTS];		
-
 	
 	uint8_t enableFanController;
 	uint8_t enableLogging;
@@ -30,10 +28,13 @@ class SettingsHandler
 	public:
 		SettingsHandler(void); 
 		void UpdateSettings(uint16_t settings);
-		void GetLoggingFrequency(void); 
-		void GetLoggingStatus(void);
-		void GetFanController(void); 
+		uint8_t GetLoggingFrequency(void); 
+		uint8_t GetLoggingStatus(void);
+		uint8_t GetFanController(void); 
 		uint8_t GetOutputSettings(uint8_t outputNumber);
+		uint8_t GetBlinkFrequency(uint8_t outputNumber); 
+		uint8_t IsForced(uint8_t outputNumber); 
+		uint8_t IsEnabled(uint8_t outputNumber); 
 
 
 	private: 
