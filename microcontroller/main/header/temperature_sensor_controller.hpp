@@ -1,7 +1,8 @@
 #ifndef __temperature_sensor_controller__
 #define __temperature_sensor_controller__
 
-#include "Arduino.h"
+//#include "Arduino.h"
+#include <stdint.h>
 
 class TemperatureSensor
 {

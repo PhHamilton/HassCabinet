@@ -1,6 +1,5 @@
 #include "header/io_configuration.hpp"
 #include "header/digital_io_controller.hpp"
-#include "header/relay_controller.hpp"
 #include "header/temperature_sensor_controller.hpp"
 #include "header/uart_handler.hpp"
 
@@ -32,5 +31,5 @@ void loop()
   //SHIFT_PORTB(ar, -5);
   light.Toggle();
   Serial.println(light.GetState());
-	delay(1000);
+	delay(250);
 }
