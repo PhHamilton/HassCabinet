@@ -1,0 +1,32 @@
+Each message consists of 16 bits, i.e., 0000 0000 0000 0000 
+The first four bytes selects what output to configure 
+	0001 0000 0000 0000 configures the first byte, 
+	0010 0000 0000 0000 configures the second byte and so forth. 
+
+Settings:
+	Byte: 
+		 0 Temperature Limit
+		 1 Temperature Limit
+		 2 Temperature Limit
+		 3 Temperature Limit
+		 4 Enable Led
+		 5 Force on 
+		 6 Blink frequency Low bit
+		 7 Blink frequency High bit
+		 8 Fan controller enabled
+		 9 Logging enabled
+		10 Logging frequency Low Bit
+		11 Logging frequency High Bit
+		12 Configure output 0
+		13 Configure output 1
+		14 Configure output 2
+		15 Configure output 3
+
+The first four bytes sets the maximum allowed temperature in the box, if it is exceeded the 
+fan will start to run. If set to zero, maximum temperature is ignored. 
+
+If bit 12-15 are all empty, the program will look at bit 0-3 and set the corresponding value
+
+The high bits can be set to request certain data: 
+ 1001 - Request the temperature of the arduino 
+ 1010 - Request the temperature in the case 

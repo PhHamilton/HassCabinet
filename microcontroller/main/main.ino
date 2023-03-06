@@ -2,11 +2,14 @@
 #include "header/digital_io_controller.hpp"
 #include "header/temperature_sensor_controller.hpp"
 #include "header/uart_handler.hpp"
+#include <math.h>
 
+#define BUFFER_SIZE 6
 
 io_information io; 
  
 DigitalIOController light(io);
+UartHandler uartHanlder(); 
 
 typedef struct {
     uint8_t *portb_addr;
@@ -17,19 +20,22 @@ Memory ar;
 void setup() 
 {
   Serial.begin(9600); 
-  ar.portb_addr = &PORTB;
-  light.Initialize();
-  //CLR_BIT(PORTB, 5); 
-	light.Initialize(); 
-	light.TurnOff(); 
+  handler.Initialize(); 
+  char test[BUFFER_SIZE] = {'0','x','0','0','0','F'};
+
+  Serial.println(HexValueConverter("0xFA21"));
+
+
+  
 }
 
 void loop() 
 {
-  //PORTB |= 1<<5;
-	//delay(500); 
-  //SHIFT_PORTB(ar, -5);
-  light.Toggle();
-  Serial.println(light.GetState());
-	delay(250);
+  if(handler.MessageAvailable)
+  {
+
+
+
+    
+  }
 }

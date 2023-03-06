@@ -1,7 +1,9 @@
 #include "header/acutest.h"
 #include "header/digital_io_controller.hpp"
 #include "header/settings.hpp"
+#include "header/uart_handler.hpp"
 #include <stdint.h>
+#include <stdlib.h>
 
 
 uint8_t ddrAddress  = 0x00; 
@@ -102,8 +104,48 @@ void test_settings_handler_UpdateSettings(void)
 				Enable Led: 1 
 		
 				1000 1111 0111 0000
-	*/ 
+				*/
+	 
 }
+
+void test_uart_handler_ConvertFromHexToUint16(void)
+{
+	const uint8_t nTests = 5;
+	char *msg[nTests] =  {"0x0000", "0x000F", "0x00F0", "0x0F00", "0xF000"};
+	uint16_t expected[nTests] = {0, 15, 240, 3840, 61440};
+
+
+	// char *msg[nTests] =  {"0xF000"};
+	// uint16_t expected[nTests] = {61440};
+
+	UartHandler handler; 
+
+	for(int i = 0; i < nTests; i++)
+	{
+		uint16_t result = handler.ConvertFromHexToUint16(msg[i]);
+		TEST_CHECK_(result == expected[i], "Testing ConvertFromHexToUint16(%s): Expected : %d, actual %d", msg[i],  expected[i], result);
+	}
+}
+
+void test_uart_handler_GetMessageType(void)
+{
+	const uint8_t nTests = 8;
+	uint16_t msg[nTests] =  {61440, 36864, 0, 40960, 4096, 8192, 16384, 32768};
+	MessageType expected[nTests] = {UNKNOWN, REQUEST_MICROCONTROLLER_TEMPERATURE, CHANGE_OUTPUT, REQUEST_CABINET_TEMPERATURE, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS};
+
+
+	// char *msg[nTests] =  {"0xF000"};
+	// uint16_t expected[nTests] = {61440};
+
+	UartHandler handler; 
+
+	for(int i = 0; i < nTests; i++)
+	{
+		MessageType result = handler.GetMessageType(msg[i]);
+		TEST_CHECK_(result == expected[i], "Testing GetMessageType(%i): Expected : %d, actual %d", msg[i],  expected[i], result);
+	}
+}
+
 
 
 TEST_LIST = 
@@ -111,6 +153,8 @@ TEST_LIST =
     {"DigitalIOController.Initialize();", test_digital_io_controller_initialize},
     {"DigitalIOController.TurnOn();", test_digital_io_controller_TurnOn},
     {"DigitalIOController.TurnOff();", test_digital_io_controller_TurnOff},
-    {"SettingsHandler.UpdateSettings()", test_settings_handler_UpdateSettings},
+    {"SettingsHandler.UpdateSettings();", test_settings_handler_UpdateSettings},
+    {"UartHandler.ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER]);" ,test_uart_handler_ConvertFromHexToUint16},
+    {"UartHandler.GetMessageType();",test_uart_handler_GetMessageType},
     {0}
 };
