@@ -6,21 +6,79 @@ UartHandler::UartHandler(void){}
 
 void UartHandler::Initialize(void)
 {
-	// Serial.begin(BAUDRATE)
+	#ifdef TEST
+		Serial.begin(BAUDRATE);
+	#endif
 }
 
 uint8_t UartHandler::MessageAvailable(void)
 {
-	//return (Serial.Available > 0);
-	return 0; 
+	#ifdef TEST
+	if(Serial.available() > 0)
+		return TRUE; 
+	else
+		return FALSE;
+	#else
+		return 0;
+	#endif
+
+	//return 0; 
 }
 
 uint16_t UartHandler::GetMessage(void) 
 {
 	char serialBuffer[MESSAGE_BUFFER];
 	memset(serialBuffer, 0, MESSAGE_BUFFER);
-	// Serial.readBytes(serialBuffer, BUFFER_SIZE);
-	return ConvertFromHexToUint16(serialBuffer); 
+
+	#ifdef TEST
+	Serial.readBytes(serialBuffer, MESSAGE_BUFFER);
+	#endif
+
+	if(MessageIsValid(serialBuffer)) 
+	{
+		SendMessage("OK");
+		return ConvertFromHexToUint16(serialBuffer); 
+	}
+	else
+	{
+		SendMessage("Unknown Message");
+		return NOT_VALID;
+	}
+}
+
+uint8_t UartHandler::SendMessage(char *message)
+{
+	#ifdef TEST
+		Serial.println(message);
+	#endif 
+	return 0;
+}
+
+uint8_t UartHandler::MessageIsValid(char message[MESSAGE_BUFFER])
+{
+
+	if(message[0] != '0') return NOT_VALID;
+	if(message[1] != 'x') return NOT_VALID;
+	for(int i = 2; i < 6; i++)
+	{
+		if(!_isValidHex(message[i])) return FALSE; 
+	}
+
+
+	return VALID; 
+}
+
+uint8_t UartHandler::_isValidHex(char character)
+{
+	int charAsInt = character - '0';
+
+	for(int i = 0; i < 10; i++)
+		if(charAsInt == i) return TRUE;
+
+	if(charAsInt >= 17 && charAsInt <= 22) return TRUE;
+
+
+	return FALSE;
 }
 
 MessageType UartHandler::GetMessageType(uint16_t messageType)

@@ -1,6 +1,7 @@
 #include "header/io_configuration.hpp"
 #include "header/digital_io_controller.hpp"
 #include "header/temperature_sensor_controller.hpp"
+#include "header/settings.hpp"
 #include "header/uart_handler.hpp"
 #include <math.h>
 
@@ -9,7 +10,8 @@
 io_information io; 
  
 DigitalIOController light(io);
-UartHandler uartHanlder(); 
+UartHandler uartHanlder; 
+OutputHandler outputHandler(); 
 
 typedef struct {
     uint8_t *portb_addr;
@@ -17,25 +19,37 @@ typedef struct {
 
 Memory ar; 
 
+uint16_t UartMessage; 
+
 void setup() 
 {
-  Serial.begin(9600); 
-  handler.Initialize(); 
-  char test[BUFFER_SIZE] = {'0','x','0','0','0','F'};
-
-  Serial.println(HexValueConverter("0xFA21"));
-
-
-  
+  uartHanlder.Initialize(); 
+  outputHandler.Initialize(); 
 }
 
 void loop() 
 {
-  if(handler.MessageAvailable)
+  if(uartHanlder.MessageAvailable())
   {
-
-
-
-    
+    UartMessage = uartHanlder.GetMessage(); 
+    switch(uartHanlder.GetMessageType(UartMessage))
+    {
+      case UNKNOWN:
+        break; 
+      case UPDATE_SETTINGS:
+        break;
+      case CHANGE_OUTPUT: 
+        outputHandler.ChangeOutput(UartMessage); 
+        break; 
+      case REQUEST_MICROCONTROLLER_TEMPERATURE:
+        break; 
+      case REQUEST_CABINET_TEMPERATURE:
+        break; 
+      default: 
+        // UNKNOWN STATE
+        break;
+    }
   }
+  // Idle state! 
+  
 }

@@ -30,3 +30,72 @@ If bit 12-15 are all empty, the program will look at bit 0-3 and set the corresp
 The high bits can be set to request certain data: 
  1001 - Request the temperature of the arduino 
  1010 - Request the temperature in the case 
+
+
+Enable Output:
+	Byte:
+		 0 Output 0 status
+		 1 Output 1 status
+		 2 Output 2 status
+		 3 Output 3 status
+		 4
+		 5
+		 6
+		 7
+		 8
+		 9
+		10
+		11
+		12
+		13
+		14
+		15
+
+
+
+ /*
+		* Settings: 
+			Output: 1 
+				Logging Frequency: 2 Hz
+				Enable Logging: 1 
+				Enable Fan Controller: 1
+				
+				Blink: 1 Hz
+				Force on: 0 
+				Enable Led: 1 
+				
+				0001 1011 0101 0000  
+
+			Output: 2 
+				Logging Frequency: 3 Hz
+				Enable Logging: 1 
+				Enable Fan Controller: 0
+				
+				Blink: 0 Hz
+				Force on: 1 
+				Enable Led: 0 
+			
+			0010 1110 0010 0000  
+
+			Output: 3
+				Logging Frequency: 0 Hz
+				Enable Logging: 0 
+				Enable Fan Controller: 0
+
+				Blink: 0 Hz
+				Force on: 0 
+				Enable Led: 0 
+				
+				0100 0000 0000 0000  
+
+			Output: 4 
+				Logging Frequency: 3 Hz
+				Enable Logging: 1 
+				Enable Fan Controller: 1
+				
+				Blink: 1 Hz
+				Force on: 1 
+				Enable Led: 1 
+		
+				1000 1111 0111 0000
+	*/

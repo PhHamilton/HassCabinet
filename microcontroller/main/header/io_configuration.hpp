@@ -1,16 +1,19 @@
 #ifndef __io_configuration__
 #define __io_configuration__
 
+#define GET_BIT(byte, bitpos) (uint8_t)((byte >> bitpos) & 1); 
+#define SET_BIT(bitpos) (1 << bitpos)
 
-#define SET_BIT(BYTEADDR, BITPOS) ((*BYTEADDR) |= (1<<(BITPOS)))
-#define CLR_BIT(BYTEADDR, BITPOS) ((*BYTEADDR) &= ~(1<<(BITPOS)))
-#define TOGGLE_BIT(BYTEADDR, BITPOS) ((*BYTEADDR) ^= (1<<BITPOS))
-#define GET_BIT(BYTEADDR, BITPOS) ((*BYTEADDR) >> BITPOS) & 1
+#define SET_BIT_AT_ADDRESS(BYTEADDR, BITPOS) ((*BYTEADDR) |= (1<<(BITPOS)))
+#define CLR_BIT_AT_ADDRESS(BYTEADDR, BITPOS) ((*BYTEADDR) &= ~(1<<(BITPOS)))
+#define TOGGLE_BIT_AT_ADDRESS(BYTEADDR, BITPOS) ((*BYTEADDR) ^= (1<<BITPOS))
+#define GET_BIT_AT_ADDRESS(BYTEADDR, BITPOS) ((*BYTEADDR) >> BITPOS) & 1
 
 #define OFF 0
 #define ON 1
 #define FALSE 0
 #define TRUE 1 
+#define NUMBER_OF_OUTPUTS 4
 
 #define RELAY_DDR DDRB
 #define RELAY_1_PIN 5 

@@ -21,7 +21,6 @@ class DigitalIOController
 		void TurnOff(void); 
 		void Toggle(void); 
 		uint8_t GetState(void); 
-		uint8_t testval; 
 
 	private: 
 		io_information _ioInfo;

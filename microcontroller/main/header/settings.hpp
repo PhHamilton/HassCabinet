@@ -1,10 +1,9 @@
 #ifndef __settings_h__
 #define __settings_h__
 
-#define NUMBER_OF_OUTPUTS 4
-
 //#include "Arduino.h"
 #include <stdint.h>
+#include "io_configuration.hpp"
 
 typedef struct
 {
@@ -28,6 +27,7 @@ class SettingsHandler
 	public:
 		SettingsHandler(void); 
 		void UpdateSettings(uint16_t settings);
+		void LoadDefaultSettings(void);
 		uint8_t GetLoggingFrequency(void); 
 		uint8_t GetLoggingStatus(void);
 		uint8_t GetFanController(void); 
@@ -41,6 +41,4 @@ class SettingsHandler
 		settings _settings; 
 
 };
- 
-
 #endif

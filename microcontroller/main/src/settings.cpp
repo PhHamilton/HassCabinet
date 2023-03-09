@@ -1,6 +1,5 @@
 #include "../header/settings.hpp"
-
-#define GET_BIT(byte, bitpos) (uint8_t)((byte >> bitpos) & 1); 
+#include "../header/io_configuration.hpp"
 
 #define ENABLE_LED 					4
 #define FORCE_ON_BIT 				5
@@ -11,8 +10,16 @@
 #define LOGGING_ENABLE_BIT 		   	9
 #define LOGGING_FREQUENCY_LOW_BIT  	10
 #define LOGGING_FREQUENCY_HIGH_BIT 	11
+#define OUTPUT_ZERO_BIT 			12
 
 SettingsHandler::SettingsHandler(void){}
+
+void SettingsHandler::LoadDefaultSettings(void)
+{
+	uint16_t DefaultSettings = 0x0010;
+	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
+		UpdateSettings(SET_BIT(OUTPUT_ZERO_BIT + i) | DefaultSettings);
+}
 
 void SettingsHandler::UpdateSettings(uint16_t settings)
 {
@@ -47,8 +54,8 @@ void SettingsHandler::UpdateSettings(uint16_t settings)
 	lowBit = GET_BIT(settings, LOGGING_FREQUENCY_LOW_BIT);
 
 	_settings.loggingFrequency = highBit + lowBit; 
-	_settings.LedStatusSetting[outputNo].enableLed = GET_BIT(settings, ENABLE_LED)
-	_settings.LedStatusSetting[outputNo].forceOn = GET_BIT(settings, FORCE_ON_BIT)
+	_settings.LedStatusSetting[outputNo].enableLed = GET_BIT(settings, ENABLE_LED);
+	_settings.LedStatusSetting[outputNo].forceOn = GET_BIT(settings, FORCE_ON_BIT);
 
 	highBit = 2 * GET_BIT(settings, BLINK_FREQUENCY_HIGH_BIT); 
 	lowBit = GET_BIT(settings, BLINK_FREQUENCY_LOW_BIT);

@@ -48,7 +48,7 @@ void test_settings_handler_UpdateSettings(void)
 	uint8_t ExpectedForceOn[4] = {0, 1, 0, 1}; 
 	uint8_t ExpectedEnableLed[4] = {1, 0, 0, 1}; 
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
 	{
 		settings.UpdateSettings(settingsMsg[i]); 
 		
@@ -58,54 +58,34 @@ void test_settings_handler_UpdateSettings(void)
 		TEST_CHECK_(settings.GetBlinkFrequency(i) == ExpectedBlinkFrequency[i], "Testing GetBlinkFrequency(%i): Expected : %d, actual %d",i,  ExpectedBlinkFrequency[i], settings.GetBlinkFrequency(i));
 		TEST_CHECK_(settings.IsForced(i) == ExpectedForceOn[i], "Testing IsForced(%i): Expected : %d, actual %d",i,  ExpectedForceOn[i], settings.IsForced(i));
 		TEST_CHECK_(settings.IsEnabled(i) == ExpectedEnableLed[i], "Testing IsEnabled(%i): Expected : %d, actual %d",i,  ExpectedEnableLed[i], settings.IsEnabled(i));
-	}
-	/*
-		* Settings: 
-			Output: 1 
-				Logging Frequency: 2 Hz
-				Enable Logging: 1 
-				Enable Fan Controller: 1
-				
-				Blink: 1 Hz
-				Force on: 0 
-				Enable Led: 1 
-				
-				0001 1011 0101 0000  
-
-			Output: 2 
-				Logging Frequency: 3 Hz
-				Enable Logging: 1 
-				Enable Fan Controller: 0
-				
-				Blink: 0 Hz
-				Force on: 1 
-				Enable Led: 0 
-			
-			0010 1110 0010 0000  
-
-			Output: 3
-				Logging Frequency: 0 Hz
-				Enable Logging: 0 
-				Enable Fan Controller: 0
-
-				Blink: 0 Hz
-				Force on: 0 
-				Enable Led: 0 
-				
-				0100 0000 0000 0000  
-
-			Output: 4 
-				Logging Frequency: 3 Hz
-				Enable Logging: 1 
-				Enable Fan Controller: 1
-				
-				Blink: 1 Hz
-				Force on: 1 
-				Enable Led: 1 
-		
-				1000 1111 0111 0000
-				*/
+	}			
 	 
+}
+
+void test_settings_handler_DefaultSettings(void)
+{
+	SettingsHandler settings;
+
+	uint16_t DefaultSettings = 0x0010; 
+	uint8_t ExpectedLoggingFrequency = 0;
+	uint8_t ExpectedEnableLogging = 0;
+	uint8_t ExpectedEnableFanController = 0;
+	uint8_t ExpectedBlinkFrequency = 0;
+	uint8_t ExpectedForceOn = 0;
+	uint8_t ExpectedEnableLed = 1;
+
+	settings.LoadDefaultSettings();
+
+	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
+	{ 	
+		TEST_CHECK_(settings.GetLoggingFrequency() == ExpectedLoggingFrequency, "Testing GetLoggingFrequency(%i): Expected : %d, actual %d", i, ExpectedLoggingFrequency, settings.GetLoggingFrequency());
+		TEST_CHECK_(settings.GetLoggingStatus() == ExpectedEnableLogging, "Testing GetLoggingStatus(%i): Expected : %d, actual %d", i, ExpectedEnableLogging, settings.GetLoggingStatus());
+		TEST_CHECK_(settings.GetFanController() == ExpectedEnableFanController, "Testing GetFanController(%i): Expected : %d, actual %d",i,  ExpectedEnableFanController, settings.GetFanController());
+		TEST_CHECK_(settings.GetBlinkFrequency(i) == ExpectedBlinkFrequency, "Testing GetBlinkFrequency(%i): Expected : %d, actual %d",i,  ExpectedBlinkFrequency, settings.GetBlinkFrequency(i));
+		TEST_CHECK_(settings.IsForced(i) == ExpectedForceOn, "Testing IsForced(%i): Expected : %d, actual %d",i,  ExpectedForceOn, settings.IsForced(i));
+		TEST_CHECK_(settings.IsEnabled(i) == ExpectedEnableLed, "Testing IsEnabled(%i): Expected : %d, actual %d",i,  ExpectedEnableLed, settings.IsEnabled(i));
+	}	
+
 }
 
 void test_uart_handler_ConvertFromHexToUint16(void)
@@ -146,6 +126,40 @@ void test_uart_handler_GetMessageType(void)
 	}
 }
 
+void test_uart_handler_MessageIsValid(void)
+{
+	const uint8_t nTests = 7;
+	char *msg[nTests] =  {"0x0000", "0x", "00000", "0xTT0x", "", "0xFF02", "0xFAEC"};
+	uint8_t expected[nTests] = {VALID, NOT_VALID, NOT_VALID, NOT_VALID, NOT_VALID, VALID, VALID};
+
+
+	// char *msg[nTests] =  {"0xF000"};
+	// uint16_t expected[nTests] = {61440};
+
+	UartHandler handler; 
+
+	for(int i = 0; i < nTests; i++)
+	{
+		uint8_t result = handler.MessageIsValid(msg[i]);
+		TEST_CHECK_(result == expected[i], "Testing GetMessageType(%s): Expected : %d, actual %d", msg[i],  expected[i], result);
+	}
+}
+
+void test_output_handler_ChangeOutput(void)
+{
+
+	const uint8_t nTests = 7;
+	char *msg[nTests] =  {"0x0000", "0x0001", "0x0002", "0x0004", "0x0008", "0x000D", "0x0005"};
+	uint8_t expected[nTests] = {VALID, NOT_VALID, NOT_VALID, NOT_VALID, NOT_VALID, VALID, VALID};
+
+	SettingsHandler settings; 
+	settings.LoadDefaultSettings(); 
+
+
+
+
+
+}
 
 
 TEST_LIST = 
@@ -154,7 +168,10 @@ TEST_LIST =
     {"DigitalIOController.TurnOn();", test_digital_io_controller_TurnOn},
     {"DigitalIOController.TurnOff();", test_digital_io_controller_TurnOff},
     {"SettingsHandler.UpdateSettings();", test_settings_handler_UpdateSettings},
+    {"SettingsHandler.LoadDefaultSettings();", test_settings_handler_DefaultSettings},
     {"UartHandler.ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER]);" ,test_uart_handler_ConvertFromHexToUint16},
     {"UartHandler.GetMessageType();",test_uart_handler_GetMessageType},
+    {"UartHandler.MessageIsValid();",test_uart_handler_MessageIsValid},
+    {"OutputHandler.ChangeOutput();",test_output_handler_ChangeOutput},
     {0}
 };
