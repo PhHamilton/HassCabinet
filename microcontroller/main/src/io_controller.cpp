@@ -15,7 +15,6 @@ void DigitalIOController::Initialize(void)
 void DigitalIOController::TurnOn(void)
 {
 	SET_BIT_AT_ADDRESS(_ioInfo.PORT, _ioInfo.BIT);
-	//digitalWrite(_ioPin, 1); 
 }
 
 void DigitalIOController::TurnOff(void)
