@@ -28,7 +28,12 @@ void IOControllerGroup::TurnOffLed(void)
 	_ledOutput.TurnOff();
 }
 
-uint8_t IOControllerGroup::GetState(void)
+uint8_t IOControllerGroup::GetRelayState(void)
 {
 	return _relayOutput.GetState();
+}
+
+uint8_t IOControllerGroup::GetLedState(void)
+{
+	return _ledOutput.GetState();
 }

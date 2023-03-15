@@ -33,13 +33,13 @@ uint8_t OutputHandler::_getCurrentState(uint8_t outputNumber)
 	switch(outputNumber)
 	{
 	case 0: 
-		return _output_0.GetState();
+		return _output_0.GetRelayState();
 	case 1: 
-		return _output_1.GetState();
+		return _output_1.GetRelayState();
 	case 2: 
-		return _output_2.GetState();
+		return _output_2.GetRelayState();
 	case 3: 
-		return _output_3.GetState();
+		return _output_3.GetRelayState();
 	default: 
 		// Error! 
 		break;

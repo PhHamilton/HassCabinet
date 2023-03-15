@@ -12,7 +12,8 @@ class IOControllerGroup
 		void ToggleLed(void); 
 		void TurnOnLed(void); 
 		void TurnOffLed(void);
-		uint8_t GetState(void); 
+		uint8_t GetRelayState(void); 
+		uint8_t GetLedState(void); 
 
 	private: 
 		DigitalIOController _relayOutput; 
