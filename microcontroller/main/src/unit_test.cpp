@@ -2,6 +2,7 @@
 #include "header/digital_io_controller.hpp"
 #include "header/settings.hpp"
 #include "header/uart_handler.hpp"
+#include "header/output_handler.hpp"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -149,16 +150,45 @@ void test_output_handler_ChangeOutput(void)
 {
 
 	const uint8_t nTests = 7;
-	char *msg[nTests] =  {"0x0000", "0x0001", "0x0002", "0x0004", "0x0008", "0x000D", "0x0005"};
-	uint8_t expected[nTests] = {VALID, NOT_VALID, NOT_VALID, NOT_VALID, NOT_VALID, VALID, VALID};
+	uint16_t msg[nTests] =  {0x0001, 0x0002, 0x0004, 0x0008, 0x000D, 0x0005};
+	uint8_t expected[nTests] = {1, 2, 4, 8, 13, 5};
 
 	SettingsHandler settings; 
 	settings.LoadDefaultSettings(); 
 
+	uint8_t io_0_addr  = 0x00; 
+	uint8_t led_0_addr = 0x01;
+	uint8_t io_1_addr  = 0x02;
+	uint8_t led_1_addr = 0x03;
+	uint8_t io_2_addr  = 0x04;
+	uint8_t led_2_addr = 0x05;
+	uint8_t io_3_addr  = 0x06;
+	uint8_t led_3_addr = 0x007;
+
+	io_information io_0 {.DDR = &io_0_addr, .PORT = &io_0_addr, .PIN = &io_0_addr, .BIT = 0}; 
+	io_information led_0 {.DDR = &led_0_addr, .PORT = &led_0_addr, .PIN = &led_0_addr, .BIT = 0}; 
+	io_information io_1 {.DDR = &io_1_addr, .PORT = &io_1_addr, .PIN = &io_1_addr, .BIT = 0}; 
+	io_information led_1 {.DDR = &led_1_addr, .PORT = &led_1_addr, .PIN = &led_1_addr, .BIT = 0};
+	io_information io_2 {.DDR = &io_2_addr, .PORT = &io_2_addr, .PIN = &io_2_addr, .BIT = 0}; 
+	io_information led_2 {.DDR = &led_2_addr, .PORT = &led_2_addr, .PIN = &led_2_addr, .BIT = 0};
+	io_information io_3 {.DDR = &io_3_addr, .PORT = &io_3_addr, .PIN = &io_3_addr, .BIT = 0}; 
+	io_information led_3 {.DDR = &led_3_addr, .PORT = &led_3_addr, .PIN = &led_3_addr, .BIT = 0};
+
+	OutputHandler outputHandler(io_0, led_0, io_1, led_1, io_2, led_2, io_3, led_3);
 
 
 
+	for(int i = 0; i < nTests; i++)
+	{
+		outputHandler.ChangeOutput(msg[i], settings);
 
+		uint8_t result = outputHandler.GetStateOfAllOutputs();
+
+		
+
+		TEST_CHECK_(result == expected[i], "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", msg[i],  expected[i], result);
+		TEST_MSG("Message: %d, Values: %d, %d, %d, %d", msg[i], outputHandler.GetStateOfOutput(0), outputHandler.GetStateOfOutput(1), outputHandler.GetStateOfOutput(2), outputHandler.GetStateOfOutput(3));
+	}
 }
 
 
