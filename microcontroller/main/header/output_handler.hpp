@@ -11,8 +11,10 @@ class OutputHandler
 		OutputHandler(io_information relay0, io_information led0, io_information relay1, io_information led1, io_information relay2, io_information led2, io_information relay3, io_information led3);
 		void Initialize(void);  
 		void ChangeOutput(uint16_t message, SettingsHandler currentSettings);
-		uint8_t GetStateOfAllOutputs(void);
-		uint8_t GetStateOfOutput(uint8_t outputNumber);
+		uint8_t GetRelayStateOfAllOutputs(void);
+		uint8_t GetRelayStateOfOutput(uint8_t outputNumber);
+		uint8_t GetLedStateOfAllOutputs(void);
+		uint8_t GetLedStateOfOutput(uint8_t outputNumber);
 
 	private:
 		IOControllerGroup _output_0;

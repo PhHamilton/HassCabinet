@@ -150,20 +150,20 @@ void test_output_handler_ChangeOutput(void)
 {
 
 	const uint8_t nTests = 7;
-	uint16_t msg[nTests] =  {0x0001, 0x0002, 0x0004, 0x0008, 0x000D, 0x0005};
-	uint8_t expected[nTests] = {1, 2, 4, 8, 13, 5};
+	uint16_t msg[nTests] =  {0x0001, 0x0002, 0x0004, 0x0008, 0x000D, 0x0005, 0x0000};
+	uint8_t expected[nTests] = {0x1, 0x2, 0x4, 0x8, 0xD, 0x5, 0x0};
 
 	SettingsHandler settings; 
 	settings.LoadDefaultSettings(); 
 
 	uint8_t io_0_addr  = 0x00; 
-	uint8_t led_0_addr = 0x01;
-	uint8_t io_1_addr  = 0x02;
-	uint8_t led_1_addr = 0x03;
-	uint8_t io_2_addr  = 0x04;
-	uint8_t led_2_addr = 0x05;
-	uint8_t io_3_addr  = 0x06;
-	uint8_t led_3_addr = 0x007;
+	uint8_t led_0_addr = 0x00;
+	uint8_t io_1_addr  = 0x00;
+	uint8_t led_1_addr = 0x00;
+	uint8_t io_2_addr  = 0x00;
+	uint8_t led_2_addr = 0x00;
+	uint8_t io_3_addr  = 0x00;
+	uint8_t led_3_addr = 0x00;
 
 	io_information io_0 {.DDR = &io_0_addr, .PORT = &io_0_addr, .PIN = &io_0_addr, .BIT = 0}; 
 	io_information led_0 {.DDR = &led_0_addr, .PORT = &led_0_addr, .PIN = &led_0_addr, .BIT = 0}; 
@@ -177,18 +177,22 @@ void test_output_handler_ChangeOutput(void)
 	OutputHandler outputHandler(io_0, led_0, io_1, led_1, io_2, led_2, io_3, led_3);
 
 
-
 	for(int i = 0; i < nTests; i++)
 	{
 		outputHandler.ChangeOutput(msg[i], settings);
 
-		uint8_t result = outputHandler.GetStateOfAllOutputs();
-
-		
+		uint8_t result = outputHandler.GetRelayStateOfAllOutputs();
 
 		TEST_CHECK_(result == expected[i], "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", msg[i],  expected[i], result);
-		TEST_MSG("Message: %d, Values: %d, %d, %d, %d", msg[i], outputHandler.GetStateOfOutput(0), outputHandler.GetStateOfOutput(1), outputHandler.GetStateOfOutput(2), outputHandler.GetStateOfOutput(3));
+		TEST_MSG("Message: %d, Values: %d, %d, %d, %d", msg[i], outputHandler.GetRelayStateOfOutput(0), outputHandler.GetRelayStateOfOutput(1), outputHandler.GetRelayStateOfOutput(2), outputHandler.GetRelayStateOfOutput(3));
 	}
+
+	// Disable led on pin zero
+	settings.UpdateSettings(0x1000);
+	outputHandler.ChangeOutput(0x0001, settings); 
+
+	//TEST_CHECK_(outputHandler.GetStateOfOutput(0) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x0001,  0x0001, outputHandler.GetStateOfOutput(0));
+
 }
 
 

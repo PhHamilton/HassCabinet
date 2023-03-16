@@ -30,13 +30,14 @@ void OutputHandler::ChangeOutput(uint16_t message, SettingsHandler currentSettin
 
 uint8_t OutputHandler::_getCurrentState(uint8_t outputNumber)
 {
+	// First 4 bits LED state, Second 4 bits RelayStates
 	switch(outputNumber)
 	{
 	case 0: 
 		return _output_0.GetRelayState();
 	case 1: 
 		return _output_1.GetRelayState();
-	case 2: 
+	case 2:  
 		return _output_2.GetRelayState();
 	case 3: 
 		return _output_3.GetRelayState();
@@ -46,7 +47,7 @@ uint8_t OutputHandler::_getCurrentState(uint8_t outputNumber)
 	}
 }
 
-uint8_t OutputHandler::GetStateOfAllOutputs(void)
+uint8_t OutputHandler::GetRelayStateOfAllOutputs(void)
 {
 	uint8_t msg = 0x00; 
 	for(uint8_t i = 0; i < NUMBER_OF_OUTPUTS; i++)
@@ -56,8 +57,7 @@ uint8_t OutputHandler::GetStateOfAllOutputs(void)
 	return msg; 
 }
 
-
-uint8_t OutputHandler::GetStateOfOutput(uint8_t outputNumber)
+uint8_t OutputHandler::GetRelayStateOfOutput(uint8_t outputNumber)
 {
 	return _getCurrentState(outputNumber);  
 }
@@ -73,22 +73,33 @@ uint8_t OutputHandler::_toggleSelectedOutput(uint8_t outputNumber, SettingsHandl
 		break;
 	case 1: 
 		_output_1.ToggleRelay();
-		currentSettings.IsEnabled(outputNumber) ? _output_0.ToggleLed() : _output_0.TurnOffLed();
+		currentSettings.IsEnabled(outputNumber) ? _output_1.ToggleLed() : _output_1.TurnOffLed();
 		break; 
 	case 2: 
 		_output_2.ToggleRelay();
-		currentSettings.IsEnabled(outputNumber) ? _output_0.ToggleLed() : _output_0.TurnOffLed();
+		//_output_2.TurnOnLed();
+		//currentSettings.IsEnabled(outputNumber) ? _output_2.ToggleLed() : _output_2.TurnOffLed();
 		break;
 	case 3: 
 		_output_3.ToggleRelay();
-		currentSettings.IsEnabled(outputNumber) ? _output_0.ToggleLed() : _output_0.TurnOffLed();
+		//_output_3.ToggleLed();
+		//currentSettings.IsEnabled(outputNumber) ? _output_3.ToggleLed() : _output_3.TurnOffLed();
 		break; 
 	default: 
 		// Error! 
 		break;
 	}
 	return 0; 
-	
+}
+
+uint8_t OutputHandler::GetLedStateOfAllOutputs(void)
+{
+	return 0; 
+}
+
+uint8_t OutputHandler::GetLedStateOfOutput(uint8_t outputNumber)
+{
+	return 0; 
 }
 
 

@@ -13,6 +13,16 @@ void IOControllerGroup::ToggleRelay(void)
 	_relayOutput.Toggle(); 
 }
 
+uint8_t IOControllerGroup::GetRelayState(void)
+{
+	return _relayOutput.GetState();
+}
+
+uint8_t IOControllerGroup::GetLedState(void)
+{
+	return _ledOutput.GetState();
+}
+
 void IOControllerGroup::ToggleLed(void)
 {
 	_ledOutput.Toggle();
@@ -26,14 +36,4 @@ void IOControllerGroup::TurnOnLed(void)
 void IOControllerGroup::TurnOffLed(void)
 {
 	_ledOutput.TurnOff();
-}
-
-uint8_t IOControllerGroup::GetRelayState(void)
-{
-	return _relayOutput.GetState();
-}
-
-uint8_t IOControllerGroup::GetLedState(void)
-{
-	return _ledOutput.GetState();
 }
