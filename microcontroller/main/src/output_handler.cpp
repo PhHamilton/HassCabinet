@@ -19,7 +19,7 @@ void OutputHandler::ChangeOutput(uint16_t message, SettingsHandler currentSettin
 	for(uint8_t i = 0; i < NUMBER_OF_OUTPUTS; i++)
 	{
 		uint8_t outputStatus = GET_BIT(outputMessage, i);
-		uint8_t currentStatus = _getCurrentState(i);
+		uint8_t currentStatus = _getRelayCurrentState(i);
 
 		if(outputStatus != currentStatus)		
 			_toggleSelectedOutput(i, currentSettings);
@@ -28,7 +28,7 @@ void OutputHandler::ChangeOutput(uint16_t message, SettingsHandler currentSettin
 	}	
 }
 
-uint8_t OutputHandler::_getCurrentState(uint8_t outputNumber)
+uint8_t OutputHandler::_getRelayCurrentState(uint8_t outputNumber)
 {
 	// First 4 bits LED state, Second 4 bits RelayStates
 	switch(outputNumber)
@@ -52,14 +52,14 @@ uint8_t OutputHandler::GetRelayStateOfAllOutputs(void)
 	uint8_t msg = 0x00; 
 	for(uint8_t i = 0; i < NUMBER_OF_OUTPUTS; i++)
 	{
-		msg |= _getCurrentState(i) << i;
+		msg |= _getRelayCurrentState(i) << i;
 	}
 	return msg; 
 }
 
 uint8_t OutputHandler::GetRelayStateOfOutput(uint8_t outputNumber)
 {
-	return _getCurrentState(outputNumber);  
+	return _getRelayCurrentState(outputNumber);  
 }
 
 uint8_t OutputHandler::_toggleSelectedOutput(uint8_t outputNumber, SettingsHandler currentSettings)
@@ -77,13 +77,11 @@ uint8_t OutputHandler::_toggleSelectedOutput(uint8_t outputNumber, SettingsHandl
 		break; 
 	case 2: 
 		_output_2.ToggleRelay();
-		//_output_2.TurnOnLed();
-		//currentSettings.IsEnabled(outputNumber) ? _output_2.ToggleLed() : _output_2.TurnOffLed();
+		currentSettings.IsEnabled(outputNumber) ? _output_2.ToggleLed() : _output_2.TurnOffLed();
 		break;
 	case 3: 
 		_output_3.ToggleRelay();
-		//_output_3.ToggleLed();
-		//currentSettings.IsEnabled(outputNumber) ? _output_3.ToggleLed() : _output_3.TurnOffLed();
+		currentSettings.IsEnabled(outputNumber) ? _output_3.ToggleLed() : _output_3.TurnOffLed();
 		break; 
 	default: 
 		// Error! 
@@ -94,14 +92,37 @@ uint8_t OutputHandler::_toggleSelectedOutput(uint8_t outputNumber, SettingsHandl
 
 uint8_t OutputHandler::GetLedStateOfAllOutputs(void)
 {
-	return 0; 
+	uint8_t msg = 0x00; 
+	for(uint8_t i = 0; i < NUMBER_OF_OUTPUTS; i++)
+	{
+		msg |= _getLedCurrentState(i) << i;
+	}
+	return msg; 
 }
 
 uint8_t OutputHandler::GetLedStateOfOutput(uint8_t outputNumber)
 {
-	return 0; 
+	return _getLedCurrentState(outputNumber);  
 }
 
+uint8_t OutputHandler::_getLedCurrentState(uint8_t outputNumber)
+{
+	// First 4 bits LED state, Second 4 bits RelayStates
+	switch(outputNumber)
+	{
+	case 0: 
+		return _output_0.GetLedState();
+	case 1: 
+		return _output_1.GetLedState();
+	case 2:  
+		return _output_2.GetLedState();
+	case 3: 
+		return _output_3.GetLedState();
+	default: 
+		// Error! 
+		break;
+	}
+}
 
 uint8_t OutputHandler::_changeOutput(uint16_t message)
 {

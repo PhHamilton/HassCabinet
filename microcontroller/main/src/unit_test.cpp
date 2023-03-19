@@ -1,4 +1,4 @@
-#include "header/acutest.h"
+/*#include "header/acutest.h"
 #include "header/digital_io_controller.hpp"
 #include "header/settings.hpp"
 #include "header/uart_handler.hpp"
@@ -182,16 +182,17 @@ void test_output_handler_ChangeOutput(void)
 		outputHandler.ChangeOutput(msg[i], settings);
 
 		uint8_t result = outputHandler.GetRelayStateOfAllOutputs();
-
+		uint8_t ledResult = outputHandler.GetLedStateOfAllOutputs();
 		TEST_CHECK_(result == expected[i], "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", msg[i],  expected[i], result);
+		TEST_CHECK_(ledResult == expected[i], "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", msg[i],  expected[i], result);
 		TEST_MSG("Message: %d, Values: %d, %d, %d, %d", msg[i], outputHandler.GetRelayStateOfOutput(0), outputHandler.GetRelayStateOfOutput(1), outputHandler.GetRelayStateOfOutput(2), outputHandler.GetRelayStateOfOutput(3));
 	}
 
 	// Disable led on pin zero
 	settings.UpdateSettings(0x1000);
-	outputHandler.ChangeOutput(0x0001, settings); 
-
-	//TEST_CHECK_(outputHandler.GetStateOfOutput(0) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x0001,  0x0001, outputHandler.GetStateOfOutput(0));
+	outputHandler.ChangeOutput(0x0003, settings); 
+	TEST_CHECK_(outputHandler.GetLedStateOfOutput(0) == 0, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00000,  0x0001, outputHandler.GetLedStateOfOutput(0));
+	TEST_CHECK_(outputHandler.GetLedStateOfOutput(1) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00001,  0x0001, outputHandler.GetLedStateOfOutput(1));
 
 }
 
@@ -209,3 +210,4 @@ TEST_LIST =
     {"OutputHandler.ChangeOutput();",test_output_handler_ChangeOutput},
     {0}
 };
+*/

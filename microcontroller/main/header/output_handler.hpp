@@ -23,7 +23,8 @@ class OutputHandler
 		IOControllerGroup _output_3;
 
 		uint8_t _currentStatus;
-		uint8_t _getCurrentState(uint8_t outputNumber); 
+		uint8_t _getRelayCurrentState(uint8_t outputNumber);
+		uint8_t _getLedCurrentState(uint8_t outputNumber); 
 		uint8_t _changeOutput(uint16_t message); 
 		uint8_t _toggleSelectedOutput(uint8_t outputNumber, SettingsHandler currentSettings);
 };

@@ -6,21 +6,21 @@ UartHandler::UartHandler(void){}
 
 void UartHandler::Initialize(void)
 {
-	#ifdef TEST
+	//#ifdef TEST
 		Serial.begin(BAUDRATE);
-	#endif
+	//#endif
 }
 
 uint8_t UartHandler::MessageAvailable(void)
 {
-	#ifdef TEST
+	//#ifdef TEST
 	if(Serial.available() > 0)
 		return TRUE; 
 	else
 		return FALSE;
-	#else
+	//#else
 		return 0;
-	#endif
+	//#endif
 
 	//return 0; 
 }
@@ -30,9 +30,9 @@ uint16_t UartHandler::GetMessage(void)
 	char serialBuffer[MESSAGE_BUFFER];
 	memset(serialBuffer, 0, MESSAGE_BUFFER);
 
-	#ifdef TEST
+	//#ifdef TEST
 	Serial.readBytes(serialBuffer, MESSAGE_BUFFER);
-	#endif
+	//#endif
 
 	if(MessageIsValid(serialBuffer)) 
 	{
@@ -48,9 +48,9 @@ uint16_t UartHandler::GetMessage(void)
 
 uint8_t UartHandler::SendMessage(char *message)
 {
-	#ifdef TEST
+	//#ifdef TEST
 		Serial.println(message);
-	#endif 
+	//#endif 
 	return 0;
 }
 
