@@ -1,17 +1,18 @@
 #ifndef __temperature_sensor_controller__
 #define __temperature_sensor_controller__
 
-//#include "Arduino.h"
+#include "Arduino.h"
 #include <stdint.h>
 
 class TemperatureSensor
 {
-	/*
+	
 	public:
-		TemperatureSensor(uint8_t ddr, uint8_t pin); 
+		TemperatureSensor(uint8_t temperatureSensorPin); 
 		void Initialize(void); 
 		double GetTemperature(void); 
 		double GetHumidity(void); 
+		double GetRawData(void); 
 	private: 
 		uint8_t _temperatureSensorPin; 	
 		uint8_t _isInitialized; 
@@ -25,7 +26,8 @@ class TemperatureSensor
 		double _checkMessageValidity(void);
 		uint16_t _temperature;
 		uint16_t _humidity;
-		uint16_t _checksum; */
+		uint16_t _checksum; 
+		int read(int pin); 
 };
 
 
