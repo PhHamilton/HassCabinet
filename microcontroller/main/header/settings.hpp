@@ -1,7 +1,6 @@
 #ifndef __settings_h__
 #define __settings_h__
 
-//#include "Arduino.h"
 #include <stdint.h>
 #include "io_configuration.hpp"
 

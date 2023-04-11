@@ -2,8 +2,9 @@
 #define __uart_handler__
 #include <stdint.h>
 
+#ifndef NO_ARDUINO_LIBS
 #include <Arduino.h>
-
+#endif
 
 #define BAUDRATE 9600
 #define MESSAGE_BUFFER 6 //Format: 0x0000
@@ -64,6 +65,7 @@ class UartHandler
 		MessageType _messageType; 
 		uint8_t convertFromBase16(char hexValue);
 		uint8_t _isValidHex(char character);
+		uint16_t doubleToUint16(double dValue);
 }; 
 
 

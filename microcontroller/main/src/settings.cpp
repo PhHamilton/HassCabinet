@@ -11,14 +11,14 @@
 #define LOGGING_FREQUENCY_LOW_BIT  	10
 #define LOGGING_FREQUENCY_HIGH_BIT 	11
 #define OUTPUT_ZERO_BIT 			12
+#define DEFAULT_SETTINGS			0x0010
 
 SettingsHandler::SettingsHandler(void){}
 
 void SettingsHandler::LoadDefaultSettings(void)
 {
-	uint16_t DefaultSettings = 0x0010;
 	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
-		UpdateSettings(SET_BIT(OUTPUT_ZERO_BIT + i) | DefaultSettings);
+		UpdateSettings(SET_BIT(OUTPUT_ZERO_BIT + i) | DEFAULT_SETTINGS);
 }
 
 void SettingsHandler::UpdateSettings(uint16_t settings)

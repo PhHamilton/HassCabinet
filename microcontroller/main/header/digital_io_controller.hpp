@@ -2,7 +2,6 @@
 #define __io_controller__
 
 #include <stdint.h>
-//#include "Arduino.h"
 
 typedef struct
 {

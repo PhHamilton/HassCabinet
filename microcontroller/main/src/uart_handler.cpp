@@ -6,23 +6,21 @@ UartHandler::UartHandler(void){}
 
 void UartHandler::Initialize(void)
 {
-	//#ifdef TEST
+	#ifndef NO_ARDUINO_LIBS
 		Serial.begin(BAUDRATE);
-	//#endif
+	#endif
 }
 
 uint8_t UartHandler::MessageAvailable(void)
 {
-	//#ifdef TEST
-	if(Serial.available() > 0)
-		return TRUE; 
-	else
-		return FALSE;
-	//#else
-		return 0;
-	//#endif
+	#ifndef NO_ARDUINO_LIBS
+		if(Serial.available() > 0)
+			return TRUE; 
+		else
+			return FALSE;
+	#endif
 
-	//return 0; 
+	return 0; 
 }
 
 uint16_t UartHandler::GetMessage(void) 
@@ -30,14 +28,16 @@ uint16_t UartHandler::GetMessage(void)
 	char serialBuffer[MESSAGE_BUFFER];
 	memset(serialBuffer, 0, MESSAGE_BUFFER);
 
-	//#ifdef TEST
+	#ifndef NO_ARDUINO_LIBS
 	Serial.readBytes(serialBuffer, MESSAGE_BUFFER);
-	//#endif
+	#endif
+
+	Serial.println(serialBuffer);
 
 	if(MessageIsValid(serialBuffer)) 
 	{
 		SendMessage("OK");
-		return ConvertFromHexToUint16(serialBuffer); 
+		return ConvertFromHexToUint16(serialBuffer);   
 	}
 	else
 	{
@@ -48,9 +48,9 @@ uint16_t UartHandler::GetMessage(void)
 
 uint8_t UartHandler::SendMessage(char *message)
 {
-	//#ifdef TEST
+	#ifndef NO_ARDUINO_LIBS
 		Serial.println(message);
-	//#endif 
+	#endif
 	return 0;
 }
 
@@ -108,9 +108,16 @@ uint16_t UartHandler::ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER])
 	uint16_t val = 0;
 	for(int i = 2; i < MESSAGE_BUFFER; i++)
 	{
-  		val += convertFromBase16(hexString[i]) * (uint16_t)pow(16,MESSAGE_BUFFER-1-i);
+			uint8_t multiplier = convertFromBase16(hexString[i]); 
+			double exponent = pow(16, MESSAGE_BUFFER -1 - i );
+  		val += convertFromBase16(hexString[i]) * doubleToUint16(pow(16, MESSAGE_BUFFER-1-i));
 	}
 	return val; 
+}
+
+uint16_t UartHandler::doubleToUint16(double dValue)
+{
+	return (uint16_t)(dValue + 0.5); 
 }
 
 uint8_t UartHandler::convertFromBase16(char hexValue)
@@ -135,7 +142,6 @@ uint8_t UartHandler::convertFromBase16(char hexValue)
     case 'F':
       return 15;
       break;
-
     default:
       return hexValue - '0'; 
   }

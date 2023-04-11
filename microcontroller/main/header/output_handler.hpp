@@ -1,8 +1,8 @@
 #ifndef __output_handler__
 #define __output_handler__
+
 #include "io_controller_group.hpp"
 #include "settings.hpp"
-
 #include "io_configuration.hpp"
 
 class OutputHandler

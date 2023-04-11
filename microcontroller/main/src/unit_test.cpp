@@ -91,9 +91,9 @@ void test_settings_handler_DefaultSettings(void)
 
 void test_uart_handler_ConvertFromHexToUint16(void)
 {
-	const uint8_t nTests = 5;
-	char *msg[nTests] =  {"0x0000", "0x000F", "0x00F0", "0x0F00", "0xF000"};
-	uint16_t expected[nTests] = {0, 15, 240, 3840, 61440};
+	const uint8_t nTests = 8;
+	char *msg[nTests] =  {"0x0000", "0x000F", "0x00F0", "0x0F00", "0xF000", "0x1000", "0x0010", "0x0040"};
+	uint16_t expected[nTests] = {0, 15, 240, 3840, 61440, 4096, 16, 64};
 
 
 	// char *msg[nTests] =  {"0xF000"};
@@ -143,6 +143,21 @@ void test_uart_handler_MessageIsValid(void)
 	{
 		uint8_t result = handler.MessageIsValid(msg[i]);
 		TEST_CHECK_(result == expected[i], "Testing GetMessageType(%s): Expected : %d, actual %d", msg[i],  expected[i], result);
+	}
+}
+
+void test_uart_get_message(void)
+{
+	const uint8_t nTests = 3; 
+	char *msg[nTests] = {"0x1000", "0x2000", "0x9000"};
+	uint16_t expected[nTests] = {4096, 8192, 36864};
+
+	UartHandler handler;
+
+	for(int i = 0; i < nTests; i++)
+	{
+		//uint8_t result = handler.GetMessage(msg[i]);
+		//TEST_CHECK_(result == expected[i], "Testing GetMessage(%s): Expected : %d, actual %d", msg[i],  expected[i], result);
 	}
 }
 
@@ -207,7 +222,7 @@ TEST_LIST =
     {"UartHandler.ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER]);" ,test_uart_handler_ConvertFromHexToUint16},
     {"UartHandler.GetMessageType();",test_uart_handler_GetMessageType},
     {"UartHandler.MessageIsValid();",test_uart_handler_MessageIsValid},
+    {"UartHandler.GetMessage()", test_uart_get_message}, 
     {"OutputHandler.ChangeOutput();",test_output_handler_ChangeOutput},
     {0}
-};
-*/
+};*/
