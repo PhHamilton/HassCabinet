@@ -38,7 +38,9 @@ enum MessageType
 	UPDATE_SETTINGS,
 	CHANGE_OUTPUT,
 	REQUEST_MICROCONTROLLER_TEMPERATURE,
-	REQUEST_CABINET_TEMPERATURE
+	REQUEST_CABINET_TEMPERATURE,
+	REQUEST_CABINET_HUMIDITY,
+	REQUEST_FAN_SPEED
 };
 
 enum MessageSequence
@@ -58,6 +60,7 @@ class UartHandler
 		MessageType GetMessageType(uint16_t messageType); 
 		uint16_t GetMessage(void); 
 		uint8_t SendMessage(char *message); 
+		uint8_t SendIntMessage(uint16_t message); 
 		uint16_t ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER]);
 
 	private: 

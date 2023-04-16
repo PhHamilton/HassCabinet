@@ -54,6 +54,14 @@ uint8_t UartHandler::SendMessage(char *message)
 	return 0;
 }
 
+uint8_t UartHandler::SendIntMessage(uint16_t message)
+{
+	#ifndef NO_ARDUINO_LIBS
+		Serial.println(message);
+	#endif
+	return 0;
+}
+
 uint8_t UartHandler::MessageIsValid(char message[MESSAGE_BUFFER])
 {
 
@@ -96,6 +104,10 @@ MessageType UartHandler::GetMessageType(uint16_t messageType)
 		return REQUEST_MICROCONTROLLER_TEMPERATURE; 
 	case 10: 
 		return REQUEST_CABINET_TEMPERATURE;
+	case 11: 
+		return REQUEST_CABINET_HUMIDITY; 
+	case 12: 
+		return REQUEST_FAN_SPEED; 
 	default: 
 		return UNKNOWN;
 	}
