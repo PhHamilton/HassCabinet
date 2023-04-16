@@ -15,9 +15,9 @@ class TemperatureSensor
 		TemperatureSensor(io_information sensorPin); 
 		void Initialize(void); 
 		double ReadSensorData(void);
-		double GetTemperature(void); 
-		double GetHumidity(void); 
-		double GetRawData(void); 
+		uint16_t GetTemperature(void); 
+		uint16_t GetHumidity(void); 
+		uint16_t GetRawData(void); 
 	private: 
 		io_information _sensorPinInfo; 	
 		uint8_t _isInitialized; 
