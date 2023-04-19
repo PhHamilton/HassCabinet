@@ -1,4 +1,5 @@
 #include "../header/temperature_sensor_controller.hpp"
+#include "Arduino.h"
 
 #define SENSOR_BYTES 40 
 #define INITIALIZATION_DELAY_IN_MS 18 
