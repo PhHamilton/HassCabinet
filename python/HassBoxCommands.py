@@ -13,6 +13,9 @@ class HassBoxCommands()
 	def TurnOnFan(self): 
 		return stringBuilder.ConvertToHexNumber(FAN_OUTPUT) 
 
+	def GetMicrocontrollerTemperature(self):
+		return "0x9000"
+		
 	def GetBoxTemperature(self): 
 		return "0xA000"
 
