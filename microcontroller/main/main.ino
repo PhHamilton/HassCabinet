@@ -79,6 +79,9 @@ void loop()
         break; 
       case REQUEST_CABINET_TEMPERATURE:
         break; 
+
+      case REQUEST_OUTPUT_SETTINGS: 
+        break;
       default: 
         // UNKNOWN STATE
         break;
