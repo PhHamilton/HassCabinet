@@ -30,9 +30,8 @@ uint16_t UartHandler::GetMessage(void)
 
 	#ifndef NO_ARDUINO_LIBS
 	Serial.readBytes(serialBuffer, MESSAGE_BUFFER);
-	#endif
-
 	Serial.println(serialBuffer);
+	#endif
 
 	if(MessageIsValid(serialBuffer)) 
 	{
@@ -95,7 +94,16 @@ MessageType UartHandler::GetMessageType(uint16_t messageType)
 	case 9: 
 		return REQUEST_MICROCONTROLLER_TEMPERATURE; 
 	case 10: 
-		return REQUEST_CABINET_TEMPERATURE;
+		return REQUEST_CABINET_TEMPERATURE; 
+	case 7: 
+	case 11:
+	case 13: 
+	case 14:
+		return REQUEST_OUTPUT_SETTINGS; 
+
+	case 15: 
+		return REQUEST_OUTPUT_STATE;
+
 	default: 
 		return UNKNOWN;
 	}

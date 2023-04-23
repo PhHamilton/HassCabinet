@@ -66,10 +66,9 @@ uint8_t SettingsHandler::GetOutputSettings(uint8_t outputNumber)
 {
 
 	uint8_t settingsbyte = 0x00; 
-	// settingsbyte |= _settings.loggingFrequency << 6;
-	// settingsbyte |= _settings.enableLogging << 5;
-	// settingsbyte |= (_settings.enableFanController << 4);
-
+	settingsbyte |= _settings.loggingFrequency << 6;
+	settingsbyte |= _settings.enableLogging << 5;
+	settingsbyte |= _settings.enableFanController << 4;
 	settingsbyte |= _settings.LedStatusSetting[outputNumber].blinkFrequency << 2;
 	settingsbyte |= _settings.LedStatusSetting[outputNumber].forceOn << 1;
 	settingsbyte |= _settings.LedStatusSetting[outputNumber].enableLed << 0;
@@ -107,5 +106,3 @@ uint8_t SettingsHandler::IsEnabled(uint8_t outputNumber)
 {
 	return _settings.LedStatusSetting[outputNumber].enableLed;
 }
-
-

@@ -31,6 +31,15 @@ The high bits can be set to request certain data:
  1001 - Request the temperature of the arduino 
  1010 - Request the temperature in the case 
 
+The zeros indicates which settings should be returned to the controller 
+ Request settings from output 1: 1110
+ Request settings from output 2: 1101
+ Request settings from output 3: 1011
+ Request settings from output 4: 0111
+
+To request the state of the outputs: 
+ 1111
+
 
 Enable Output:
 	Byte:

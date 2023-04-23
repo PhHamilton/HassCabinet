@@ -1,4 +1,4 @@
-/*#include "header/acutest.h"
+#include "header/acutest.h"
 #include "header/digital_io_controller.hpp"
 #include "header/settings.hpp"
 #include "header/uart_handler.hpp"
@@ -89,6 +89,22 @@ void test_settings_handler_DefaultSettings(void)
 
 }
 
+void test_settings_get_output_settings(void)
+{
+	SettingsHandler settings;
+
+	uint16_t settingsMsg[4] = {0x1B50, 0x2E20, 0x4000, 0x8F70};
+	uint8_t expected[4] = {0xB5, 0xE2,0x00, 0xF7};
+
+	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
+	{
+		settings.UpdateSettings(settingsMsg[i]); 
+		TEST_CHECK_(settings.GetOutputSettings(i) == expected[i], "Testing GetOutputSettings(%i): Expected: %d, actual: %d", i, expected[i], settings.GetOutputSettings(i));
+	}
+
+
+}
+
 void test_uart_handler_ConvertFromHexToUint16(void)
 {
 	const uint8_t nTests = 8;
@@ -110,9 +126,9 @@ void test_uart_handler_ConvertFromHexToUint16(void)
 
 void test_uart_handler_GetMessageType(void)
 {
-	const uint8_t nTests = 8;
-	uint16_t msg[nTests] =  {61440, 36864, 0, 40960, 4096, 8192, 16384, 32768};
-	MessageType expected[nTests] = {UNKNOWN, REQUEST_MICROCONTROLLER_TEMPERATURE, CHANGE_OUTPUT, REQUEST_CABINET_TEMPERATURE, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS};
+	const uint8_t nTests = 12;
+	uint16_t msg[nTests] =  {61440, 36864, 0, 40960, 4096, 8192, 16384, 32768, 57344, 53248, 45056, 28672};
+	MessageType expected[nTests] = {REQUEST_OUTPUT_STATE, REQUEST_MICROCONTROLLER_TEMPERATURE, CHANGE_OUTPUT, REQUEST_CABINET_TEMPERATURE, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS, REQUEST_OUTPUT_SETTINGS, REQUEST_OUTPUT_SETTINGS, REQUEST_OUTPUT_SETTINGS, REQUEST_OUTPUT_SETTINGS};
 
 
 	// char *msg[nTests] =  {"0xF000"};
@@ -208,7 +224,6 @@ void test_output_handler_ChangeOutput(void)
 	outputHandler.ChangeOutput(0x0003, settings); 
 	TEST_CHECK_(outputHandler.GetLedStateOfOutput(0) == 0, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00000,  0x0001, outputHandler.GetLedStateOfOutput(0));
 	TEST_CHECK_(outputHandler.GetLedStateOfOutput(1) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00001,  0x0001, outputHandler.GetLedStateOfOutput(1));
-
 }
 
 
@@ -219,10 +234,11 @@ TEST_LIST =
     {"DigitalIOController.TurnOff();", test_digital_io_controller_TurnOff},
     {"SettingsHandler.UpdateSettings();", test_settings_handler_UpdateSettings},
     {"SettingsHandler.LoadDefaultSettings();", test_settings_handler_DefaultSettings},
+    {"SettingsHandler.GetOutputSettings();", test_settings_get_output_settings},
     {"UartHandler.ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER]);" ,test_uart_handler_ConvertFromHexToUint16},
     {"UartHandler.GetMessageType();",test_uart_handler_GetMessageType},
     {"UartHandler.MessageIsValid();",test_uart_handler_MessageIsValid},
     {"UartHandler.GetMessage()", test_uart_get_message}, 
     {"OutputHandler.ChangeOutput();",test_output_handler_ChangeOutput},
     {0}
-};*/
+};

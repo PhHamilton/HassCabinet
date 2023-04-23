@@ -49,12 +49,6 @@ void loop()
 {
   if(uartHanlder.MessageAvailable())
   {
-    temperatureSensor.ReadSensorData();
-    Serial.println(" ");
-    Serial.println(temperatureSensor.GetTemperature());
-    Serial.println(temperatureSensor.GetHumidity());  
-    
-
     UartMessage = uartHanlder.GetMessage(); 
     switch(uartHanlder.GetMessageType(UartMessage))
     {
@@ -64,23 +58,31 @@ void loop()
       case UPDATE_SETTINGS:
         settingsHandler.UpdateSettings(UartMessage); 
         break;
+
       case CHANGE_OUTPUT: 
         outputHandler.ChangeOutput(UartMessage, settingsHandler); 
         break; 
+
       case REQUEST_MICROCONTROLLER_TEMPERATURE:
-        //temperatureSensor.ReadSensorData();
-        /*
-        Serial.print("Temperature: ");
-        Serial.println(temperatureSensor.GetTemperature()); 
-        Serial.print("Raw Data: "); 
-        Serial.println(temperatureSensor.GetRawData()); 
-        Serial.print("Humidity: ");
-        Serial.println(temperatureSensor.GetHumidity()); */
         break; 
+
       case REQUEST_CABINET_TEMPERATURE:
+        temperatureSensor.ReadSensorData();
+        uartHandler.SendMessage(temperatureSensor.GetTemperature());
+        break; 
+
+      case REQUEST_CABINET_HUMIDITY: 
+        temperatureSensor.ReadSensorData();
+        uartHandler.SendMessage(temperatureSensor.GetHumidity());
+
         break; 
 
       case REQUEST_OUTPUT_SETTINGS: 
+        uartHandler.SendMessage(settingsHndler.GetOutputSettings(~((UartMessage >> 12) && 0xF)));
+        break; 
+
+      case REQUEST_OUTPUT_STATE: 
+        uartHandler.SendMessage(outputHandler.GetStateOfAllOutputs());
         break;
       default: 
         // UNKNOWN STATE
