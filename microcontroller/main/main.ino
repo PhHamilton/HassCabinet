@@ -48,7 +48,7 @@ void setup()
 void loop() 
 {
   if(uartHanlder.MessageAvailable())
-  {
+  {   
     UartMessage = uartHanlder.GetMessage(); 
     switch(uartHanlder.GetMessageType(UartMessage))
     {
@@ -64,11 +64,19 @@ void loop()
         break; 
 
       case REQUEST_MICROCONTROLLER_TEMPERATURE:
+       
         break; 
 
       case REQUEST_CABINET_TEMPERATURE:
-        temperatureSensor.ReadSensorData();
-        uartHandler.SendMessage(temperatureSensor.GetTemperature());
+          temperatureSensor.ReadSensorData(); 
+          uartHanlder.SendIntMessage(temperatureSensor.GetTemperature()); 
+        break; 
+      case REQUEST_CABINET_HUMIDITY:
+          temperatureSensor.ReadSensorData(); 
+          uartHanlder.SendIntMessage(temperatureSensor.GetHumidity()); 
+        break; 
+      case REQUEST_FAN_SPEED:
+        
         break; 
 
       case REQUEST_CABINET_HUMIDITY: 

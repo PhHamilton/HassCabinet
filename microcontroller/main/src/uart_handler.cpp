@@ -53,6 +53,14 @@ uint8_t UartHandler::SendMessage(char *message)
 	return 0;
 }
 
+uint8_t UartHandler::SendIntMessage(uint16_t message)
+{
+	#ifndef NO_ARDUINO_LIBS
+		Serial.println(message);
+	#endif
+	return 0;
+}
+
 uint8_t UartHandler::MessageIsValid(char message[MESSAGE_BUFFER])
 {
 

@@ -28,8 +28,10 @@ fan will start to run. If set to zero, maximum temperature is ignored.
 If bit 12-15 are all empty, the program will look at bit 0-3 and set the corresponding value
 
 The high bits can be set to request certain data: 
- 1001 - Request the temperature of the arduino 
- 1010 - Request the temperature in the case 
+ 1001 - Request the temperature of the arduino	(0x9000)
+ 1010 - Request the temperature in the case 	(0xA000)
+ 1011 - Request the humidity in the case		(0xB000)
+ 1100 - Reqest fan speed 						(0xC000)
 
 The zeros indicates which settings should be returned to the controller 
  Request settings from output 1: 1110

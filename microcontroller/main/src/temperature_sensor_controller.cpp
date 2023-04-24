@@ -1,8 +1,8 @@
 #include "../header/temperature_sensor_controller.hpp"
+#include "Arduino.h"
 
 #define SENSOR_BYTES 40 
-#define INITIALIZATION_DELAY_IN_MS 18
-#define HIGHT_BIT_THRESH 
+#define INITIALIZATION_DELAY_IN_MS 18 
 
 TemperatureSensor::TemperatureSensor(io_information sensorPin)
 {
@@ -14,7 +14,6 @@ void TemperatureSensor::Initialize(void)
 	// Set Sensor as an output: 
 	SET_BIT_AT_ADDRESS(_sensorPinInfo.DDR, _sensorPinInfo.BIT);
 
-
 	_isInitialized = 1; 
 	_dataSent = 0; 
 	_dataRetrieved = 0; 
@@ -23,18 +22,17 @@ void TemperatureSensor::Initialize(void)
 double TemperatureSensor::ReadSensorData(void)
 {
 	#ifndef NO_ARDUINO_LIBS
-		uint64_t measuredData = 0;
+		uint64_t measuredData = 0x00000000;
 		// Initiate Communication
 		//_sendStartSignal(); 
 		//_waitForDHTResponse();
-
+		
 		pinMode(3, OUTPUT);
 		digitalWrite(3, LOW);
 		delay(18);
 		digitalWrite(3, HIGH);
 		delayMicroseconds(40);
 		pinMode(3, INPUT);
-		Serial.println(" ");
 
 		while(digitalRead(3) == LOW){}
 		while(digitalRead(3) == HIGH){}
@@ -42,18 +40,21 @@ double TemperatureSensor::ReadSensorData(void)
 		for(int i = 0; i < 40; i++)
 		{
 			while(digitalRead(3) == LOW){}
-			unsigned long t = micros();
+			uint64_t t = micros();
 
 			while(digitalRead(3) == HIGH){}
 
 
 			if((micros() - t) > 40)
 			{
-				measuredData |= 1 << (39-i); 
-				Serial.print("1");
+				//if(i < 16)
+				//	testVar |= 1UL << (7-i); 
+				//SET_BIT_AT_ADDRESS(&measuredData, 39-i);
+				measuredData |= 1ULL << (39-i); 
+				//Serial.print("1");
 			}
-			else
-				Serial.print("0");
+			//else
+			//	Serial.print("0");
 
 			if((i+1)%8 == 0)
 				Serial.print(" ");
@@ -61,10 +62,7 @@ double TemperatureSensor::ReadSensorData(void)
 
 
 		}
-		measuredData = 38656149543;
-		Serial.println(" ");
-
-		_temperature = ((measuredData >> 16) & 0xFF);
+		_temperature = (uint8_t) (measuredData >> 16);
 		_humidity = (measuredData >> 32);
 	#endif
 	return 0;
@@ -77,10 +75,10 @@ uint8_t TemperatureSensor::_sendStartSignal(void)
 		* MCU pulls upp voltage and wait for DHT response
 	*/
 	#ifndef NO_ARDUINO_LIBS
-		pinMode(sensorPin, OUTPUT); 
-		digitalWrite(sensorPin, LOW); 
+		pinMode(3, OUTPUT); 
+		digitalWrite(3, LOW); 
 		delay(18); 
-		digitalWrite(sensorPin, HIGH); 
+		digitalWrite(3, HIGH); 
 	#endif
 	return 0; 
 }
@@ -92,25 +90,26 @@ uint8_t TemperatureSensor::_waitForDHTResponse(void)
 		* MCU pulls upp voltage for 80 us
 	*/
 	#ifndef NO_ARDUINO_LIBS
-		pinMode(sensorPin, INPUT); 
-		while(digitalRead(sensorPin) == HIGH); 
-		while(digitalRead(sensorPin) == LOW); 
-		while(digitalRead(sensorPin) == HIGH)
+		delayMicroseconds(40);
+		pinMode(3, INPUT); 
+		//while(digitalRead(sensorPin) == HIGH); 
+		while(digitalRead(3) == LOW); 
+		while(digitalRead(3) == HIGH)
 	#endif
 	return 0; 
 }
 
-double TemperatureSensor::GetTemperature(void)
+uint16_t TemperatureSensor::GetTemperature(void)
 {	
 	return _temperature; 
 }
 
-double TemperatureSensor::GetHumidity(void)
+uint16_t TemperatureSensor::GetHumidity(void)
 {
 	return _humidity; 
 }
 
-double TemperatureSensor::GetRawData(void)
+uint16_t TemperatureSensor::GetRawData(void)
 {
 	return _rawSensorData;
 }
