@@ -47,7 +47,7 @@ uint8_t OutputHandler::_getRelayCurrentState(uint8_t outputNumber)
 	}
 }
 
-uint8_t OutputHandler::GetRelayStateOfAllOutputs(void)
+uint8_t OutputHandler::GetStateOfAllOutputs(void)
 {
 	uint8_t msg = 0x00; 
 	for(uint8_t i = 0; i < NUMBER_OF_OUTPUTS; i++)
@@ -57,9 +57,19 @@ uint8_t OutputHandler::GetRelayStateOfAllOutputs(void)
 	return msg; 
 }
 
-uint8_t OutputHandler::GetRelayStateOfOutput(uint8_t outputNumber)
+uint8_t OutputHandler::GetStateOfOutput(uint8_t outputNumber)
 {
 	return _getRelayCurrentState(outputNumber);  
+}
+
+void OutputHandler::UpdateLED(uint8_t outputNumber)
+{
+
+}
+
+void OutputHandler::UpdateAllLEDs(void)
+{
+
 }
 
 uint8_t OutputHandler::_toggleSelectedOutput(uint8_t outputNumber, SettingsHandler currentSettings)

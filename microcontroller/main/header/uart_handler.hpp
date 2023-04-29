@@ -31,7 +31,6 @@
 	1111 xxxx xxxx xxxx // 
 */
 
-
 enum MessageType
 {
 	UNKNOWN,
@@ -41,7 +40,8 @@ enum MessageType
 	REQUEST_CABINET_TEMPERATURE,
 	REQUEST_CABINET_HUMIDITY,
 	REQUEST_OUTPUT_SETTINGS,
-	REQUEST_OUTPUT_STATE
+	REQUEST_OUTPUT_STATE,
+	REQUEST_FAN_SPEED
 };
 
 enum MessageSequence
