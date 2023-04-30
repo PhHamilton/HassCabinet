@@ -1,5 +1,4 @@
 #include "../header/temperature_sensor_controller.hpp"
-#include "Arduino.h"
 
 #define SENSOR_BYTES 40 
 #define INITIALIZATION_DELAY_IN_MS 18 
@@ -127,4 +126,5 @@ double TemperatureSensor::_extractMeasurements(void)
 	_humidity = (_rawSensorData & 0xFF0000) >> 16;
 	_temperature = (_rawSensorData & 0xFF00) >> 8;
 	_checksum = (_rawSensorData & 0xFF);
+	return 0; 
 }
