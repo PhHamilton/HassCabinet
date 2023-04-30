@@ -45,7 +45,7 @@ uint16_t UartHandler::GetMessage(void)
 	}
 }
 
-uint8_t UartHandler::SendMessage(char *message)
+uint8_t UartHandler::SendMessage(const char *message)
 {
 	#ifndef NO_ARDUINO_LIBS
 		Serial.println(message);
@@ -61,7 +61,7 @@ uint8_t UartHandler::SendIntMessage(uint16_t message)
 	return 0;
 }
 
-uint8_t UartHandler::MessageIsValid(char message[MESSAGE_BUFFER])
+uint8_t UartHandler::MessageIsValid(const char message[MESSAGE_BUFFER])
 {
 
 	if(message[0] != '0') return NOT_VALID;
@@ -119,7 +119,7 @@ MessageType UartHandler::GetMessageType(uint16_t messageType)
 	return _messageType;
 }
  
-uint16_t UartHandler::ConvertFromHexToUint16(char hexString[MESSAGE_BUFFER])
+uint16_t UartHandler::ConvertFromHexToUint16(const char hexString[MESSAGE_BUFFER])
 {
 	uint16_t val = 0;
 	for(int i = 2; i < MESSAGE_BUFFER; i++)
