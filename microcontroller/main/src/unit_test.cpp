@@ -67,7 +67,6 @@ void test_settings_handler_DefaultSettings(void)
 {
 	SettingsHandler settings;
 
-	uint16_t DefaultSettings = 0x0010; 
 	uint8_t ExpectedLoggingFrequency = 0;
 	uint8_t ExpectedEnableLogging = 0;
 	uint8_t ExpectedEnableFanController = 0;
@@ -108,7 +107,7 @@ void test_settings_get_output_settings(void)
 void test_uart_handler_ConvertFromHexToUint16(void)
 {
 	const uint8_t nTests = 8;
-	char *msg[nTests] =  {"0x0000", "0x000F", "0x00F0", "0x0F00", "0xF000", "0x1000", "0x0010", "0x0040"};
+	const char *msg[nTests] =  {"0x0000", "0x000F", "0x00F0", "0x0F00", "0xF000", "0x1000", "0x0010", "0x0040"};
 	uint16_t expected[nTests] = {0, 15, 240, 3840, 61440, 4096, 16, 64};
 
 
@@ -130,7 +129,7 @@ void test_uart_handler_GetMessageType(void)
 	uint16_t msg[nTests] =  {61440, 36864, 0, 40960, 4096, 8192, 16384, 32768, 57344, 53248, 45056, 28672};
 	MessageType expected[nTests] = {REQUEST_OUTPUT_STATE, REQUEST_MICROCONTROLLER_TEMPERATURE, CHANGE_OUTPUT, REQUEST_CABINET_TEMPERATURE, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS, UPDATE_SETTINGS, REQUEST_OUTPUT_SETTINGS, REQUEST_OUTPUT_SETTINGS, REQUEST_OUTPUT_SETTINGS, REQUEST_OUTPUT_SETTINGS};
 
-
+ 
 	// char *msg[nTests] =  {"0xF000"};
 	// uint16_t expected[nTests] = {61440};
 
@@ -145,14 +144,14 @@ void test_uart_handler_GetMessageType(void)
 
 void test_uart_handler_MessageIsValid(void)
 {
-	const uint8_t nTests = 7;
-	char *msg[nTests] =  {"0x0000", "0x", "00000", "0xTT0x", "", "0xFF02", "0xFAEC"};
-	uint8_t expected[nTests] = {VALID, NOT_VALID, NOT_VALID, NOT_VALID, NOT_VALID, VALID, VALID};
+	uint8_t nTests = 7;
+	const char *msg[] =  {"0x0000", "0x", "00000", "0xTT0x", "", "0xFF02", "0xFAEC"};
+	uint8_t expected[] = {VALID, NOT_VALID, NOT_VALID, NOT_VALID, NOT_VALID, VALID, VALID};
 
 
 	// char *msg[nTests] =  {"0xF000"};
 	// uint16_t expected[nTests] = {61440};
-
+ 
 	UartHandler handler; 
 
 	for(int i = 0; i < nTests; i++)
@@ -164,9 +163,10 @@ void test_uart_handler_MessageIsValid(void)
 
 void test_uart_get_message(void)
 {
+	/*
 	const uint8_t nTests = 3; 
-	char *msg[nTests] = {"0x1000", "0x2000", "0x9000"};
-	uint16_t expected[nTests] = {4096, 8192, 36864};
+	const char *msg[] = {"0x1000", "0x2000", "0x9000"};
+	uint16_t expected[] = {4096, 8192, 36864};
 
 	UartHandler handler;
 
@@ -174,7 +174,7 @@ void test_uart_get_message(void)
 	{
 		//uint8_t result = handler.GetMessage(msg[i]);
 		//TEST_CHECK_(result == expected[i], "Testing GetMessage(%s): Expected : %d, actual %d", msg[i],  expected[i], result);
-	}
+	}*/
 }
 
 void test_output_handler_ChangeOutput(void)
@@ -224,8 +224,16 @@ void test_output_handler_ChangeOutput(void)
 	outputHandler.ChangeOutput(0x0003, settings); 
 	TEST_CHECK_(outputHandler.GetLedStateOfOutput(0) == 0, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00000,  0x0001, outputHandler.GetLedStateOfOutput(0));
 	TEST_CHECK_(outputHandler.GetLedStateOfOutput(1) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00001,  0x0001, outputHandler.GetLedStateOfOutput(1));
-}
 
+	// Disable led three without changing the output
+	settings.UpdateSettings(0x2000);
+	outputHandler.UpdateLEDs(settings);
+	TEST_CHECK_(outputHandler.GetLedStateOfOutput(1) == 0, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00001,  0x0000   , outputHandler.GetLedStateOfOutput(1));	
+
+	settings.UpdateSettings(0x1010);
+	outputHandler.UpdateLEDs(settings);
+	TEST_CHECK_(outputHandler.GetLedStateOfOutput(0) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00001,  0x0001   , outputHandler.GetLedStateOfOutput(0));	
+}
 
 TEST_LIST = 
 {
