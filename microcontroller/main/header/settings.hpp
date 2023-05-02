@@ -11,7 +11,7 @@ typedef struct
 		uint8_t forceOn;
 		uint8_t enableLed;
 		uint8_t blinkFrequency;   
-
+		uint32_t lastBlinked; 
 	} LedStatusSetting[NUMBER_OF_OUTPUTS];		
 	
 	uint8_t enableFanController;
@@ -34,7 +34,8 @@ class SettingsHandler
 		uint8_t GetBlinkFrequency(uint8_t outputNumber); 
 		uint8_t IsForced(uint8_t outputNumber); 
 		uint8_t IsEnabled(uint8_t outputNumber); 
-
+		uint32_t GetLastBlinked(uint8_t outputNumber);
+		void SetLastBlinked(uint8_t outputNumber, uint32_t lastBlinked); 
 
 	private: 
 		settings _settings; 

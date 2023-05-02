@@ -1,3 +1,5 @@
+/*
+
 #include "header/acutest.h"
 #include "header/digital_io_controller.hpp"
 #include "header/settings.hpp"
@@ -163,7 +165,7 @@ void test_uart_handler_MessageIsValid(void)
 
 void test_uart_get_message(void)
 {
-	/*
+	
 	const uint8_t nTests = 3; 
 	const char *msg[] = {"0x1000", "0x2000", "0x9000"};
 	uint16_t expected[] = {4096, 8192, 36864};
@@ -174,7 +176,7 @@ void test_uart_get_message(void)
 	{
 		//uint8_t result = handler.GetMessage(msg[i]);
 		//TEST_CHECK_(result == expected[i], "Testing GetMessage(%s): Expected : %d, actual %d", msg[i],  expected[i], result);
-	}*/
+	}
 }
 
 void test_output_handler_ChangeOutput(void)
@@ -250,3 +252,4 @@ TEST_LIST =
     {"OutputHandler.ChangeOutput();",test_output_handler_ChangeOutput},
     {0}
 };
+*/

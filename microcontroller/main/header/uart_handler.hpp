@@ -62,6 +62,7 @@ class UartHandler
 		uint16_t GetMessage(void); 
 		uint8_t SendMessage(const char *message); 
 		uint8_t SendIntMessage(uint16_t message); 
+		uint8_t SendLargeIntMessage(uint32_t message); 
 		uint16_t ConvertFromHexToUint16(const char hexString[MESSAGE_BUFFER]);
 
 	private: 

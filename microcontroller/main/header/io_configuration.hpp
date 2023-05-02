@@ -14,6 +14,7 @@
 #define FALSE 0
 #define TRUE 1 
 #define NUMBER_OF_OUTPUTS 4
+#define NUMBER_OF_OUTPUTS_WITH_LED 3 
 
 #define RELAY_DDR DDRB
 #define RELAY_1_PIN 5 

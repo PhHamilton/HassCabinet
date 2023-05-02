@@ -1,5 +1,5 @@
 #include "../header/output_handler.hpp"
-
+#define STARTUP_LIGHT_ON_TIME 250
 
 OutputHandler::OutputHandler(io_information relay0, io_information led0, io_information relay1, io_information led1, io_information relay2, io_information led2, io_information relay3, io_information led3)
 							: _output_0(relay0, led0), _output_1(relay1, led1), _output_2(relay2, led2), _output_3(relay3, led3){}
@@ -10,6 +10,22 @@ void OutputHandler::Initialize(void)
 	_output_1.Initialize();
 	_output_2.Initialize();
 	_output_3.Initialize();
+
+	_startupLEDSequence();
+}
+
+void OutputHandler::_startupLEDSequence(void)
+{
+	for(int i = 0; i < NUMBER_OF_OUTPUTS_WITH_LED; i++)
+	{
+		IOControllerGroup * currentOutput = _getOutputObject(i);
+		currentOutput->TurnOnLed(); 
+		#ifndef NO_ARDUINO_LIBS
+		delay(STARTUP_LIGHT_ON_TIME); 
+		#endif
+		currentOutput->TurnOffLed(); 
+	}
+	
 }
 
 void OutputHandler::ChangeOutput(uint16_t message, SettingsHandler currentSettings)
@@ -48,7 +64,7 @@ uint8_t OutputHandler::_getRelayCurrentState(uint8_t outputNumber)
 	}
 }
 
-uint8_t OutputHandler::GetStateOfAllOutputs(void)
+uint8_t OutputHandler::GetRelayStateOfAllOutputs(void)
 {
 	uint8_t msg = 0x00; 
 	for(uint8_t i = 0; i < NUMBER_OF_OUTPUTS; i++)
@@ -58,19 +74,9 @@ uint8_t OutputHandler::GetStateOfAllOutputs(void)
 	return msg; 
 }
 
-uint8_t OutputHandler::GetStateOfOutput(uint8_t outputNumber)
+uint8_t OutputHandler::GetRelayStateOfOutput(uint8_t outputNumber)
 {
 	return _getRelayCurrentState(outputNumber);  
-}
-
-void OutputHandler::UpdateLED(uint8_t outputNumber)
-{
-
-}
-
-void OutputHandler::UpdateAllLEDs(void)
-{
-
 }
 
 uint8_t OutputHandler::_toggleSelectedOutput(uint8_t outputNumber, SettingsHandler currentSettings)

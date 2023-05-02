@@ -19,6 +19,7 @@ void SettingsHandler::LoadDefaultSettings(void)
 {
 	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
 		UpdateSettings(SET_BIT(OUTPUT_ZERO_BIT + i) | DEFAULT_SETTINGS);
+
 }
 
 void SettingsHandler::UpdateSettings(uint16_t settings)
@@ -105,4 +106,14 @@ uint8_t SettingsHandler::IsForced(uint8_t outputNumber)
 uint8_t SettingsHandler::IsEnabled(uint8_t outputNumber)
 {
 	return _settings.LedStatusSetting[outputNumber].enableLed;
+}
+
+uint32_t SettingsHandler::GetLastBlinked(uint8_t outputNumber)
+{
+	return _settings.LedStatusSetting[outputNumber].lastBlinked;
+}
+
+void SettingsHandler::SetLastBlinked(uint8_t outputNumber, uint32_t lastBlinked)
+{
+	_settings.LedStatusSetting[outputNumber].lastBlinked = lastBlinked;
 }

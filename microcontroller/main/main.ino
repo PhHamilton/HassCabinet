@@ -6,6 +6,7 @@
 #include "header/output_handler.hpp"
 #include <math.h>
 
+
 #define BUFFER_SIZE 6
 io_information io_4 {.DDR = &DDRB, .PORT = &PORTB, .PIN = &PINB, .BIT = 3}; 
 io_information led_4 {.DDR = &DDRD, .PORT = &PORTD, .PIN = &PIND, .BIT = 4}; 
@@ -35,6 +36,8 @@ typedef struct {
 Memory ar; 
 
 uint32_t UartMessage; 
+uint32_t lastBlinkedArray[NUMBER_OF_OUTPUTS] = {0, 0, 0, 0}; 
+uint32_t prevTime = 0; 
 
 void setup() 
 {
@@ -62,6 +65,7 @@ void loop()
 
       case CHANGE_OUTPUT: 
         outputHandler.ChangeOutput(UartMessage, settingsHandler); 
+        outputHandler.UpdateLEDs(settingsHandler);
         break; 
 
       case REQUEST_MICROCONTROLLER_TEMPERATURE:
@@ -77,7 +81,7 @@ void loop()
           uartHanlder.SendIntMessage(temperatureSensor.GetHumidity()); 
         break; 
       case REQUEST_OUTPUT_SETTINGS: 
-        //uartHandler.SendMessage(settingsHndler.GetOutputSettings(~((UartMessage >> 12) && 0xF)));
+        uartHanlder.SendMessage(settingsHandler.GetOutputSettings(~((UartMessage >> 12) && 0xF)));
         break; 
 
       case REQUEST_OUTPUT_STATE: 
@@ -88,8 +92,27 @@ void loop()
         break;
     }
   }
-
-  
   // Idle state! 
-  
+
+  for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
+  {
+    if(settingsHandler.GetBlinkFrequency(i) == OFF || settingsHandler.IsEnabled(i) == FALSE)
+        continue;
+    else
+    {
+      IOControllerGroup * currentOutput = outputHandler._getOutputObject(i); 
+      
+      if(currentOutput->GetRelayState() == OFF) continue; 
+      else
+      {  
+        uint32_t currentTime = millis(); 
+        if(currentTime - settingsHandler.GetLastBlinked(i) > 1000/settingsHandler.GetBlinkFrequency(i))
+        {
+          settingsHandler.SetLastBlinked(i, currentTime);
+          //lastBlinkedArray[i] = currentTime; 
+          currentOutput->ToggleLed();
+        }
+      }
+    } 
+  }
 }
