@@ -57,6 +57,7 @@ void loop()
         break; 
       case UPDATE_SETTINGS:
         settingsHandler.UpdateSettings(UartMessage); 
+        outputHandler.UpdateLEDs(settingsHandler);
         break;
 
       case CHANGE_OUTPUT: 
@@ -75,15 +76,12 @@ void loop()
           temperatureSensor.ReadSensorData(); 
           uartHanlder.SendIntMessage(temperatureSensor.GetHumidity()); 
         break; 
-      case REQUEST_FAN_SPEED:
-        
-        break; 
       case REQUEST_OUTPUT_SETTINGS: 
         //uartHandler.SendMessage(settingsHndler.GetOutputSettings(~((UartMessage >> 12) && 0xF)));
         break; 
 
       case REQUEST_OUTPUT_STATE: 
-        uartHanlder.SendMessage(outputHandler.GetStateOfAllOutputs());
+        //uartHanlder.SendMessage(outputHandler.GetStateOfAllOutputs());
         break;
       default: 
         // UNKNOWN STATE

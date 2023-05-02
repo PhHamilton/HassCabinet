@@ -43,6 +43,7 @@ uint8_t OutputHandler::_getRelayCurrentState(uint8_t outputNumber)
 		return _output_3.GetRelayState();
 	default: 
 		// Error! 
+		return RELAY_STATE_NOT_AVAILABLE; 
 		break;
 	}
 }
@@ -115,6 +116,15 @@ uint8_t OutputHandler::GetLedStateOfOutput(uint8_t outputNumber)
 	return _getLedCurrentState(outputNumber);  
 }
 
+void OutputHandler::UpdateLEDs(SettingsHandler currentSettings)
+{
+	for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
+	{
+		IOControllerGroup *currentOutput = _getOutputObject(i);
+		currentSettings.IsEnabled(i) == TRUE ? (currentOutput->GetRelayState() == ON ? currentOutput->TurnOnLed() : currentOutput->TurnOffLed()) : currentOutput->TurnOffLed();
+	}
+}
+
 uint8_t OutputHandler::_getLedCurrentState(uint8_t outputNumber)
 {
 	// First 4 bits LED state, Second 4 bits RelayStates
@@ -129,6 +139,7 @@ uint8_t OutputHandler::_getLedCurrentState(uint8_t outputNumber)
 	case 3: 
 		return _output_3.GetLedState();
 	default: 
+		return LED_STATE_NOT_AVAILABLE;
 		// Error! 
 		break;
 	}
@@ -150,5 +161,22 @@ uint8_t OutputHandler::_changeOutput(uint16_t message)
 		default: 
 			//Unknown state, do nothing.. 
 			return -1;  
+	}
+}
+
+IOControllerGroup * OutputHandler::_getOutputObject(uint8_t outputNumber)
+{
+	switch(outputNumber)
+	{
+		case 0: 
+			return &_output_0;
+		case 1: 
+			return &_output_1;
+		case 2: 
+			return &_output_2;
+		case 3: 
+			return &_output_3;
+		default:
+			return &_output_0; 
 	}
 }

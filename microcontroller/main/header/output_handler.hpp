@@ -5,6 +5,9 @@
 #include "settings.hpp"
 #include "io_configuration.hpp"
 
+#define RELAY_STATE_NOT_AVAILABLE 101
+#define LED_STATE_NOT_AVAILABLE 101
+
 class OutputHandler
 {
 	public:
@@ -15,8 +18,12 @@ class OutputHandler
 		uint8_t GetStateOfOutput(uint8_t outputNumber);
 		uint8_t GetLedStateOfAllOutputs(void);
 		uint8_t GetLedStateOfOutput(uint8_t outputNumber);
+<<<<<<< HEAD
 		void UpdateLED(uint8_t outputNumber); 
 		void UpdateAllLEDs(void); 
+=======
+		void UpdateLEDs(SettingsHandler currentSettings);
+>>>>>>> main
 
 	private:
 		IOControllerGroup _output_0;
@@ -24,10 +31,10 @@ class OutputHandler
 		IOControllerGroup _output_2;
 		IOControllerGroup _output_3;
 
-		uint8_t _currentStatus;
 		uint8_t _getRelayCurrentState(uint8_t outputNumber);
 		uint8_t _getLedCurrentState(uint8_t outputNumber); 
 		uint8_t _changeOutput(uint16_t message); 
+		IOControllerGroup * _getOutputObject(uint8_t outputNumber); 
 		uint8_t _toggleSelectedOutput(uint8_t outputNumber, SettingsHandler currentSettings);
 };
 
