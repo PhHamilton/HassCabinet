@@ -12,6 +12,7 @@
 #define LOGGING_FREQUENCY_HIGH_BIT 	11
 #define OUTPUT_ZERO_BIT 			12
 #define DEFAULT_SETTINGS			0x0010
+#define ERRORNOUS_OUTPUT_NUMBER 	255
 
 SettingsHandler::SettingsHandler(void){}
 
@@ -24,26 +25,7 @@ void SettingsHandler::LoadDefaultSettings(void)
 
 void SettingsHandler::UpdateSettings(uint16_t settings)
 {
-	uint8_t outputNo; 
-	switch(settings >> 12)
-	{
-		case 1:
-			outputNo = 0; 
-			break; 
-		case 2: 
-			outputNo = 1; 
-			break; 
-		case 4: 
-			outputNo = 2; 
-			break; 
-		case 8: 
-			outputNo = 3; 
-			break; 
-
-		default: 
-			//Unknown state, do nothing.. 
-			return; 
-	}
+	uint8_t outputNo = _getOutputNumber(settings >> 12); 
 
 	uint8_t highBit; 
 	uint8_t lowBit; 
@@ -65,17 +47,18 @@ void SettingsHandler::UpdateSettings(uint16_t settings)
 
 uint8_t SettingsHandler::GetOutputSettings(uint8_t outputNumber)
 {
+	uint8_t outputNo = _getOutputNumber(outputNumber);
 
 	uint8_t settingsbyte = 0x00; 
 	settingsbyte |= _settings.loggingFrequency << 6;
 	settingsbyte |= _settings.enableLogging << 5;
 	settingsbyte |= _settings.enableFanController << 4;
-	settingsbyte |= _settings.LedStatusSetting[outputNumber].blinkFrequency << 2;
-	settingsbyte |= _settings.LedStatusSetting[outputNumber].forceOn << 1;
-	settingsbyte |= _settings.LedStatusSetting[outputNumber].enableLed << 0;
+	settingsbyte |= _settings.LedStatusSetting[outputNo].blinkFrequency << 2;
+	settingsbyte |= _settings.LedStatusSetting[outputNo].forceOn << 1;
+	settingsbyte |= _settings.LedStatusSetting[outputNo].enableLed << 0;
 
 
-	return  settingsbyte; 
+	return  settingsbyte;
 }
 
 uint8_t SettingsHandler::GetLoggingFrequency(void)
@@ -116,4 +99,23 @@ uint32_t SettingsHandler::GetLastBlinked(uint8_t outputNumber)
 void SettingsHandler::SetLastBlinked(uint8_t outputNumber, uint32_t lastBlinked)
 {
 	_settings.LedStatusSetting[outputNumber].lastBlinked = lastBlinked;
+}
+
+uint8_t SettingsHandler::_getOutputNumber(uint8_t settingsNumber)
+{
+	switch(settingsNumber)
+	{
+		case 1:
+			return 0; 
+		case 2: 
+			return 1; 
+		case 4: 
+			return 2; 
+		case 8: 
+			return 3;  
+
+		default: 
+			//Unknown state, do nothing.. 
+			return ERRORNOUS_OUTPUT_NUMBER;
+	}
 }

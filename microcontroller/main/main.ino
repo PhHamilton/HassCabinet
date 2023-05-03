@@ -81,11 +81,11 @@ void loop()
           uartHanlder.SendIntMessage(temperatureSensor.GetHumidity()); 
         break; 
       case REQUEST_OUTPUT_SETTINGS: 
-        uartHanlder.SendMessage(settingsHandler.GetOutputSettings(~((UartMessage >> 12) && 0xF)));
+        uartHanlder.SendIntMessage(settingsHandler.GetOutputSettings(((UartMessage >> 12) ^ 0xF)));
         break; 
 
       case REQUEST_OUTPUT_STATE: 
-        //uartHanlder.SendMessage(outputHandler.GetStateOfAllOutputs());
+        uartHanlder.SendIntMessage(outputHandler.GetRelayStateOfAllOutputs());
         break;
       default: 
         // UNKNOWN STATE
@@ -109,7 +109,6 @@ void loop()
         if(currentTime - settingsHandler.GetLastBlinked(i) > 1000/settingsHandler.GetBlinkFrequency(i))
         {
           settingsHandler.SetLastBlinked(i, currentTime);
-          //lastBlinkedArray[i] = currentTime; 
           currentOutput->ToggleLed();
         }
       }

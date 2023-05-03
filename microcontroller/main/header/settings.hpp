@@ -39,6 +39,7 @@ class SettingsHandler
 
 	private: 
 		settings _settings; 
+		uint8_t _getOutputNumber(uint8_t settingsNumber); 
 
 };
 #endif

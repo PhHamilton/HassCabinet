@@ -1,6 +1,4 @@
-/*
-
-#include "header/acutest.h"
+/*#include "header/acutest.h"
 #include "header/digital_io_controller.hpp"
 #include "header/settings.hpp"
 #include "header/uart_handler.hpp"
