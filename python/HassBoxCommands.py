@@ -80,7 +80,7 @@ class OutputSettings():
 		self.__led = DISABLED
 
 	def GetLedStatus(self):
-		return self.__led;
+		return self.__led
 
 	def ForceLedOn(self):
 		self.__forceOnStatus = ENABLED
