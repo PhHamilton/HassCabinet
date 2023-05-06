@@ -1,3 +1,7 @@
+OFF = 0
+ON = 1 
+NUMBER_OF_OUTPUTS = 4
+
 class Options(): 
     def __init__(self, name, action):
         self.name = name
@@ -5,9 +9,9 @@ class Options():
 
 class MainMenu(): 
     def __init__(self):
-        self._defaultAction = 0
+        self._defaultAction = OFF
         self._Options = list()
-        for i in range(4): 
+        for i in range(NUMBER_OF_OUTPUTS): 
             self._Options.append(Options(self.GetText(self._defaultAction, i), self._defaultAction))
         self._Options.append(Options("Settings", 1))
         
@@ -16,18 +20,18 @@ class MainMenu():
         return self._Options
     
     def UpdateOption(self, OptionNumber):
-        if(self._Options[OptionNumber].action == 0): 
-            self._Options[OptionNumber].action = 1
-            self._Options[OptionNumber].name = self.GetText(1, OptionNumber)
+        if(self._Options[OptionNumber].action == OFF): 
+            self._Options[OptionNumber].action = ON
+            self._Options[OptionNumber].name = self.GetText(ON, OptionNumber)
         else: 
-            self._Options[OptionNumber].action = 0
-            self._Options[OptionNumber].name = self.GetText(0, OptionNumber)
+            self._Options[OptionNumber].action = OFF
+            self._Options[OptionNumber].name = self.GetText(OFF, OptionNumber)
     
     def GetNumberOfOptions(self): 
         return len(self._Options) - 1
 
     def GetText(self, action, relayNumber): 
-        if(action == 1): nextState = "off"
+        if(action == ON): nextState = "off"
         else: nextState = "on "
         return "Turn " + nextState + " relay " + str(relayNumber + 1)
 
