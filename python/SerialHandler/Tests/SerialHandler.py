@@ -5,12 +5,11 @@ NO_TIMEOUT = -1
 class SerialHandler(): 
 	def __init__(self, serialInfo): 
 		self.__serialInfo = serialInfo
-
 		self.__serialObject = serial.Serial()
 
 	def Open(self): 
 		self.__initiateSerialPortParameters()
-		self._-serialObject.open()
+		self.__serialObject.open()
 
 	def Close(self): 
 		self.__serialObject.close()
@@ -33,9 +32,10 @@ class SerialHandler():
 		return self.ReadBytes(nBytes)
 
 	def __initiateSerialPortParameters(self): 
-		self.__serialObject.baudrate = self.serialInfo.GetBaudRate()
-		self.__serialObject.port = self.serialInfo.GetSerialPort()
-		self.__serialObject.timeout = self.serialInfo.GetTimeout()
+		self.__serialObject.baudrate = self.__serialInfo.GetBaudRate()
+		self.__serialObject.port = self.__serialInfo.GetSerialPort()
+		if(self.__serialInfo.GetTimeout() != NO_TIMEOUT):
+			self.__serialObject.timeout = self.__serialInfo.GetTimeout()
 
 class SerialInformation(): 
 	def __init__(self, serialport, baudrate, timeout = NO_TIMEOUT):
@@ -58,3 +58,8 @@ class SerialInformation():
 		return self.__serialPort
 	def GetTimeout(self): 
 		return self.__timeout
+	
+if __name__ == "__main__": 
+	print("Starting SerialHandler.py")
+	serial_information = SerialInformation("/dev/ttyACM1", 9600)
+	serial = SerialHandler(serial_information)
