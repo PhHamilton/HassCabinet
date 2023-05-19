@@ -1,4 +1,13 @@
+import numpy as np 
+from SerialHandler.Tests.SerialHandler import SerialHandler, SerialInformation
+
+BAUD_RATE = 9600
+COM_PORT = "/dev/ttyACM1"
+
+NUMBER_OF_RETURN_BYTES = 6 
+
 FAN_OUTPUT = 8
+REQUEST_STATE_OF_ALL_OUTPUTS = "0xF000"
 REQUEST_CABINET_HUMIDITY = "0xB000"
 REQUEST_CABINET_TEMPERATURE = "0xA000"
 REQUEST_MICROCONTROLLER_TEMPERATURE = "0x9000"
@@ -13,18 +22,45 @@ MINIMUM_TEMPERATURE = 0
 ENABLED = 1 
 DISABLED = 0
 
-class HassBoxCommands():
-	def __init__(): 
-		stringBuilder = OutputStringBuilder()
+TEMPERATURE_CONTROL_BIT = 8
+LOGGING_BIT = 9
+OUTPUT_ENABLE_BIT = 5
+LED_ENABLE_BIT = 4
+BLINK_FREQUENCY_BIT = 6
+NUMBER_OF_INPUTS = 4
 
-	def UpdateOutputSettings(self, outputNumber, settings): 
-		pass
+
+class HassBoxCommunicator:
+	def __init__(self): 
+		serialInformation = SerialInformation(COM_PORT, BAUD_RATE)
+		#self.serial.Open()
+
+		#self.__outputState = np.uint16(self.GetOutputState())
+		self.__outputState = np.uint16(0)
+
+	def UpdateOutputSettings(self, outputNumber): 
+		self.__outputState |= 1 << OUTPUT_START_BIT+outputNumber
+	
+	def ClearOutputNumber(self): 
+		for i in range(NUMBER_OF_INPUTS+1): 
+			self.__clearBit(OUTPUT_START_BIT + i)
+		
 
 	def GetCurrentOutputSettings(self, outputNumber): 
 		pass
 
 	def TurnOnFan(self): 
-		return stringBuilder.ConvertToHexNumber(FAN_OUTPUT) 
+		pass
+
+	def ResetToDefaultSettings(self): 
+		self.__clearBit(LOGGING_BIT)
+		self.__clearBit(TEMPERATURE_CONTROL_BIT)
+	
+	def ResetToDefaultOutputSettings(self): 
+		self.__setBit(OUTPUT_ENABLE_BIT)
+		self.__clearBit(LED_ENABLE_BIT)
+		self.__clearBit(BLINK_FREQUENCY_BIT)
+		self.__clearBit(BLINK_FREQUENCY_BIT+1)
 
 	def GetMicrocontrollerTemperature(self):
 		return REQUEST_MICROCONTROLLER_TEMPERATURE
@@ -38,19 +74,78 @@ class HassBoxCommands():
 	def TurnOnOutputNo(self, outputNumber): 
 		#currentOutputState
 		#newoutputstate
-		return stringBuilder.ConvertToHexNumber(outputNumber)
-
+		self.__setBit(outputNumber)
+		
 	def TurnOffOutputNo(self, outputNumber):
-		#currentOutputState = Get output state! 
-		#newOutputState |= ~self.__shiftBit(outputNumber)
+		self.__clearBit(outputNumber)
+	
+	def UpdateOutputState(self, outputNumber): 
+		if(self.__getBit(outputNumber) == DISABLED):
+			self.TurnOnOutputNo(outputNumber)
+		else:
+			self.TurnOffOutputNo(outputNumber)
 
-		return stringBuilder.ConvertToHexNumber(outputNumber)
+	def UpdateLoggingState(self):
+		if(self.__getBit(LOGGING_BIT) == DISABLED):
+			self.__setBit(LOGGING_BIT)
+		else:
+			self.__clearBit(LOGGING_BIT)
+	
+	def EnableTemperatureControl(self): 
+		if(self.__getBit(TEMPERATURE_CONTROL_BIT) == DISABLED):
+			self.__setBit(TEMPERATURE_CONTROL_BIT)
+		else:
+			self.__clearBit(TEMPERATURE_CONTROL_BIT)
+
+	def UpdateOutputAvailability(self): 
+		self.__updateBit(OUTPUT_ENABLE_BIT)
+
+	def UpdateLedAvailability(self): 
+		self.__updateBit(LED_ENABLE_BIT)
+
+	def UpdateBlinkFrequency(self, blinkFrequency): 
+		self.__clearBit(BLINK_FREQUENCY_BIT)
+		self.__clearBit(BLINK_FREQUENCY_BIT + 1)
+		#self.__outputState |= int(blinkFrequency) << int(BLINK_FREQUENCY_BIT)
+
+		if(blinkFrequency == 1):
+			self.__setBit(BLINK_FREQUENCY_BIT)
+		elif(blinkFrequency == 2): 
+			self.__setBit(BLINK_FREQUENCY_BIT+1)
+		elif(blinkFrequency == 3): 
+			self.__setBit(BLINK_FREQUENCY_BIT)
+			self.__setBit(BLINK_FREQUENCY_BIT+1)
+		else:
+			pass
+
+	def GetOutputState(self):
+		#self.__readOutputState()
+		#return self.__outputState
+		return self.__outputState
 
 	def TurnOnAllOutputs(self): 
 		return TURN_ON_ALL_OUTPUTS
 
 	def TurnOffAllOutputs(self): 
 		return TURN_OFF_ALL_OUTPUTS
+	
+	def __updateBit(self, bit): 
+		if(self.__getBit(bit) == DISABLED):
+			self.__setBit(bit)
+		else:
+			self.__clearBit(bit)
+
+	def __setBit(self, bit):
+		self.__outputState |= 1 << int(bit)
+
+	def __clearBit(self, bit): 
+		self.__outputState &= ~(1 << (int(bit)))
+	
+	def __getBit(self, bit):
+		return (self.__outputState >> int(bit)) & 1
+
+	def __readOutputState(self):
+		self.__outputState = self.serial.WriteReadBytes(REQUEST_STATE_OF_ALL_OUTPUTS, NUMBER_OF_RETURN_BYTES)
 
 
 class OutputSettings(): 

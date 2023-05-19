@@ -1,10 +1,10 @@
 import serial 
-
+import time 
 NO_TIMEOUT = -1 
 
-class SerialHandler(): 
-	def __init__(self, serialInfo): 
-		self.__serialInfo = serialInfo
+class SerialHandler: 
+	def __init__(self): 
+		#self.__serialInfo = serialInfo
 		self.__serialObject = serial.Serial()
 
 	def Open(self): 
@@ -32,12 +32,12 @@ class SerialHandler():
 		return self.ReadBytes(nBytes)
 
 	def __initiateSerialPortParameters(self): 
-		self.__serialObject.baudrate = self.__serialInfo.GetBaudRate()
-		self.__serialObject.port = self.__serialInfo.GetSerialPort()
-		if(self.__serialInfo.GetTimeout() != NO_TIMEOUT):
-			self.__serialObject.timeout = self.__serialInfo.GetTimeout()
+		self.__serialObject.baudrate = 9600#self.__serialInfo.GetBaudRate()
+		self.__serialObject.port = "/dev/ttyACM1"#self.__serialInfo.GetSerialPort()
+		#if(self.__serialInfo.GetTimeout() != NO_TIMEOUT):
+		#	self.__serialObject.timeout = self.__serialInfo.GetTimeout()
 
-class SerialInformation(): 
+class SerialInformation: 
 	def __init__(self, serialport, baudrate, timeout = NO_TIMEOUT):
 		self.__baudrate = baudrate
 		self.__serialPort = serialport
@@ -63,3 +63,9 @@ if __name__ == "__main__":
 	print("Starting SerialHandler.py")
 	serial_information = SerialInformation("/dev/ttyACM1", 9600)
 	serial = SerialHandler(serial_information)
+	print("Opening serial port")
+	serial.Open()
+	time.sleep(3)
+	print("Writing 0x0008 to serial")
+	serial.Write(b'0x0008')
+	#Write a script that waits for the UC to accept incomming serial
