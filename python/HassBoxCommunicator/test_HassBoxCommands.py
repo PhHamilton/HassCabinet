@@ -1,5 +1,5 @@
-from HassBoxCommands import * 
-
+from HassBoxCommands import *
+#from HassBoxCommunicator.HassBoxCommands import *
 
 class TestOutputSettings: 
 	def setup_method(self):

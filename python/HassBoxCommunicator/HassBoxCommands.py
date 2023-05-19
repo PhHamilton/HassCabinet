@@ -1,5 +1,6 @@
-import numpy as np 
-from SerialHandler.SerialHandler import SerialHandler, SerialInformation
+import sys
+sys.path.insert(0,'..')
+
 
 BAUD_RATE = 9600
 COM_PORT = "/dev/ttyACM1"
@@ -32,11 +33,10 @@ NUMBER_OF_INPUTS = 4
 
 class HassBoxCommunicator:
 	def __init__(self): 
-		serialInformation = SerialInformation(COM_PORT, BAUD_RATE)
 		#self.serial.Open()
 
 		#self.__outputState = np.uint16(self.GetOutputState())
-		self.__outputState = np.uint16(0)
+		self.__outputState = 0
 
 	def UpdateOutputSettings(self, outputNumber): 
 		self.__outputState |= 1 << OUTPUT_START_BIT+outputNumber
