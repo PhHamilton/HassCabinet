@@ -1,5 +1,5 @@
 import numpy as np 
-from SerialHandler.Tests.SerialHandler import SerialHandler, SerialInformation
+from SerialHandler.SerialHandler import SerialHandler, SerialInformation
 
 BAUD_RATE = 9600
 COM_PORT = "/dev/ttyACM1"

@@ -1,5 +1,5 @@
-from Terminal import Terminal
-from HeaderAndFooter import HeaderAndFooter
+from TerminalHandler.Terminal import Terminal
+from TerminalHandler.HeaderAndFooter import HeaderAndFooter
 
 class ScreenWriter(): 
     def __init__(self): 

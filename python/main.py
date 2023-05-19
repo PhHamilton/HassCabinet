@@ -1,11 +1,11 @@
 import sys 
 sys.path.insert(0,'..')
 
-from InputHandler import InputHandler
-from MenuHandler import MenuHandler
+from InputHandler.InputHandler import InputHandler
+from MenuHandler.MenuHandler import MenuHandler
 
-from HassBoxCommands import HassBoxCommunicator
-from SerialHandler.Tests.SerialHandler import SerialHandler
+from HassBoxCommunicator.HassBoxCommands import HassBoxCommunicator
+from SerialHandler.SerialHandler import SerialHandler
 
 DISABLE_SERIAL = True
 

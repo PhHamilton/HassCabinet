@@ -1,5 +1,8 @@
-from ScreenWriter import ScreenWriter
-from Menus import MainMenu, SettingsMenu, OutputSettingsMenu
+import sys
+sys.path.insert(0,'..')
+
+from TerminalHandler.ScreenWriter import ScreenWriter
+from MenuHandler.Menus import MainMenu, SettingsMenu, OutputSettingsMenu
 
     
 class MenuHandler(): 
