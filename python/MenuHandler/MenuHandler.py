@@ -6,7 +6,9 @@ from MenuHandler.Menus import MainMenu, SettingsMenu, OutputSettingsMenu
 
     
 class MenuHandler(): 
-    def __init__(self): 
+    def __init__(self, DISABLE_SCREENWRITER = False): 
+        self.DISABLE_SCREENWRITER = DISABLE_SCREENWRITER
+
         self._screenWriter = ScreenWriter()
         self._currentMenu = 0
          
@@ -15,22 +17,26 @@ class MenuHandler():
         self._outputSettingsMenu = OutputSettingsMenu()
 
         self._numberOfInputs = self._mainMenu.GetNumberOfOptions()
-        self._screenWriter.LoadMenu(self._mainMenu.LoadOptions())
+
+        if(self.DISABLE_SCREENWRITER == False):
+            self._screenWriter.LoadMenu(self._mainMenu.LoadOptions())
 
         self._previousMenu = 0
 
-    def UpdateMenuOption(self, option): 
+    def SetMenuOption(self, option, outputNumber = None): 
         if(self._currentMenu == 0): 
             self._mainMenu.SetOptions(option)
         elif(self._currentMenu == 1): 
-            pass
+            self._settingsMenu.SetOptions(option)
         elif(self._currentMenu == 2):
-            pass
+            self._outputSettingsMenu.SetOptions(option, outputNumber)
         else: 
             pass 
+        self.UpdateMenu()
 
     def Update(self, keyInput): 
-        self._screenWriter.ClerScreen()
+        if(self.DISABLE_SCREENWRITER == False):
+            self._screenWriter.ClerScreen()
         if(self._isValid(keyInput)):
             if(keyInput == 'q'):
                 return
@@ -46,7 +52,6 @@ class MenuHandler():
                         self._currentMenu = 2
                 elif(self._currentMenu == 2):
                     self._outputSettingsMenu.UpdateOption(int(keyInput))
-                    print(self._numberOfInputs)
                 else:
                     pass
 
@@ -54,21 +59,33 @@ class MenuHandler():
 
 
     def UpdateMenu(self):
-        if(self._currentMenu == 0): 
-            self._screenWriter.LoadMenu(self._mainMenu.LoadOptions())
-        elif(self._currentMenu == 1): 
-            self._screenWriter.LoadMenu(self._settingsMenu.LoadOptions())
-        elif(self._currentMenu == 2): 
-            self._screenWriter.LoadMenu(self._outputSettingsMenu.LoadOptions())
-        else: 
-            pass
+        if(self.DISABLE_SCREENWRITER == False):
+            if(self._currentMenu == 0): 
+                self._screenWriter.LoadMenu(self._mainMenu.LoadOptions())
+            elif(self._currentMenu == 1): 
+                self._screenWriter.LoadMenu(self._settingsMenu.LoadOptions())
+            elif(self._currentMenu == 2): 
+                self._screenWriter.LoadMenu(self._outputSettingsMenu.LoadOptions(self.GetCurrentOutputSetting()))
+            else: 
+                pass
     
     def GetCurrentMenu(self): 
         return self._currentMenu
+    
     def GetCurrentOutputSetting(self): 
         return self._outputSettingsMenu.GetCurrentOutput()
+    
     def GetCurrentOutputsBlinkFrequency(self):
         return self._outputSettingsMenu.GetCurretnBlinkFrequency()
+
+    def GetOutputOptions(self): 
+        return self._mainMenu.GetOptions()
+    
+    def GetCurrentSettings(self):
+        return self._settingsMenu.GetOptions()
+    
+    def GetOutputSettings(self, outputNumber):
+        return self._outputSettingsMenu.GetOptions(outputNumber)
 
     def _changeMenu(self): 
         if(self._currentMenu == 0):

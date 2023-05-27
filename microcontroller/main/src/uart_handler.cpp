@@ -35,7 +35,7 @@ uint16_t UartHandler::GetMessage(void)
 
 	if(MessageIsValid(serialBuffer)) 
 	{
-		SendMessage("OK");
+		//SendMessage("OK");
 		return ConvertFromHexToUint16(serialBuffer);   
 	}
 	else

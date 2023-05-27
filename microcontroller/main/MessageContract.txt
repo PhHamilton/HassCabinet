@@ -10,7 +10,7 @@ Settings:
 		 2 Temperature Limit
 		 3 Temperature Limit
 		 4 Enable Led
-		 5 Force on 
+		 5 Enable Output
 		 6 Blink frequency Low bit
 		 7 Blink frequency High bit
 		 8 Fan controller enabled

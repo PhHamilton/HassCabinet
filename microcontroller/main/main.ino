@@ -39,6 +39,8 @@ uint32_t UartMessage;
 uint32_t lastBlinkedArray[NUMBER_OF_OUTPUTS] = {0, 0, 0, 0}; 
 uint32_t prevTime = 0; 
 
+char* UartOKResponse = "OK";
+
 void setup() 
 {
   Serial.begin(9600);
@@ -61,15 +63,18 @@ void loop()
       case UPDATE_SETTINGS:
         settingsHandler.UpdateSettings(UartMessage); 
         outputHandler.UpdateLEDs(settingsHandler);
+        uartHanlder.SendMessage(UartOKResponse);
         break;
 
       case CHANGE_OUTPUT: 
         outputHandler.ChangeOutput(UartMessage, settingsHandler); 
         outputHandler.UpdateLEDs(settingsHandler);
+        uartHanlder.SendMessage(UartOKResponse);
         break; 
 
       case REQUEST_MICROCONTROLLER_TEMPERATURE:
-       
+
+        uartHanlder.SendMessage(UartOKResponse); 
         break; 
 
       case REQUEST_CABINET_TEMPERATURE:

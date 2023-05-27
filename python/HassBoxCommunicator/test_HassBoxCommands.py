@@ -66,9 +66,11 @@ class TestOutputSettings:
 		assert  self.outputsettings.GetBlinkFrequency() == MINIMUM_BLINK_FREQUENCY
 
 
-class TestStringbuilder: 
+class TestHassBoxCommunicator: 
 	def setup_method(self):
-		pass
+		self.communicator = HassBoxCommunicator()
 	
-	def test_1(self): 
+	def test_UpdateOutputSettings(self): 
+		
+
 		assert  1 == 1
