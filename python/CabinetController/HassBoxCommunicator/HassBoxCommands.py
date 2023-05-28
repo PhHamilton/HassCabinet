@@ -39,12 +39,14 @@ class HassBoxCommunicator:
 		self.__outputState = 0
 
 	def UpdateOutputSettings(self, outputNumber): 
-		self.__outputState |= 1 << OUTPUT_START_BIT+outputNumber
+		self.__outputState |= 1 << OUTPUT_START_BIT+(outputNumber + 1)
 	
 	def ClearOutputNumber(self): 
 		for i in range(NUMBER_OF_INPUTS+1): 
 			self.__clearBit(OUTPUT_START_BIT + i)
-		
+
+	def ClearMessage(self): 
+		self.__outputState = 0; 
 
 	def GetCurrentOutputSettings(self, outputNumber): 
 		pass
@@ -57,8 +59,8 @@ class HassBoxCommunicator:
 		self.__clearBit(TEMPERATURE_CONTROL_BIT)
 	
 	def ResetToDefaultOutputSettings(self): 
-		self.__setBit(OUTPUT_ENABLE_BIT)
-		self.__clearBit(LED_ENABLE_BIT)
+		self.__setBit(LED_ENABLE_BIT)
+		self.__clearBit(OUTPUT_ENABLE_BIT)
 		self.__clearBit(BLINK_FREQUENCY_BIT)
 		self.__clearBit(BLINK_FREQUENCY_BIT+1)
 

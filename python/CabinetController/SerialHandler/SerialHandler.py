@@ -29,10 +29,9 @@ class SerialHandler:
 
 	def WriteReadBytes(self, text, nBytes):
 		self.Write(text)
-		print(self.ReadBytes(8)) #To discard the sent bytes
+		self.ReadBytes(8) #To discard the sent bytes
 		val = self.ReadBytes(nBytes)
-		print(val)
-		print(self.ReadBytes(2))
+		self.ReadBytes(2)
 		return int.from_bytes(val, 'big') - 48#From ascii
 
 	def __initiateSerialPortParameters(self): 

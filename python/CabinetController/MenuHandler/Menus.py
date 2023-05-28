@@ -181,9 +181,11 @@ class OutputSettingsMenu():
                 txt = self.GetEnableText(int(options) >> int(i), " output")
             elif(i == 1):
                 txt = self.GetEnableText(int(options) >> int(i), " led")
-            else:
-                self._currentBlinkFrequency[outputNumber] = (int(options) >> int(i)) + 2*(int(options) >> int(i) & 1)
+            elif(i == 2): 
+                self._currentBlinkFrequency[outputNumber] = (int(options) >> int(i)) & 1 + 2*((int(options) >> int(i+1)) & 1)
                 txt = "Update blink frequency (Current: {} Hz)".format(self._currentBlinkFrequency[outputNumber])
+            else: 
+                pass
             
             self._OutputOptions[outputNumber][i+1].name = txt
 
@@ -220,7 +222,9 @@ class OutputSettingsMenu():
             if(self._currentBlinkFrequency[self._currentOutputNumber] > MAXIMUM_BLINK_FREQUENCY):
                self._currentBlinkFrequency[self._currentOutputNumber] = 0
             self._OutputOptions[self._currentOutputNumber][OptionNumber].name = "Update blink frequency (Current: {} Hz)".format(self._currentBlinkFrequency[self._currentOutputNumber])
-        else: 
+        elif(OptionNumber == 4): #Reset to defaults
+            self.SetOptions(0x1, self._currentOutputNumber)
+        else:
             pass
 
     def GetEnableText(self, action, type): 
