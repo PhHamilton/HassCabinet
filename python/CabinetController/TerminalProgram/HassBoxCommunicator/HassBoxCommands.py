@@ -235,24 +235,3 @@ class OutputSettings():
 
 	def GetLoggingStatus(self): 
 		return self.__logging
-
-class OutputStringBuilder(): 
-	def __init__(self): 
-		pass
-
-	def CreateHexNumber(self, outputNumber, settings = None): 
-		pass 
-		
-	def ConvertToHexNumber(self, outputNo): 
-		hexNumber |= __shiftBit(OUTPUT_START_BIT + (outputNumber - 1))
-
-
-		return "0x000" + self.__numberToString(self.__shiftBit(outputNumber))
-
-	def __shiftBit(self, bitpos):
-		return 1 << bitpos
-
-	def __numberToString(number):
-		return string(number)
-
-
