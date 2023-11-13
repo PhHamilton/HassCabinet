@@ -3,6 +3,7 @@
 #include "header/settings.hpp"
 #include "header/uart_handler.hpp"
 #include "header/output_handler.hpp"
+#include "header/temperature_monitor.hpp"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -235,6 +236,11 @@ void test_output_handler_ChangeOutput(void)
 	TEST_CHECK_(outputHandler.GetLedStateOfOutput(0) == 1, "Testing ChangeOutput(%d, settings): Expected : %d, actual %d", 0x00001,  0x0001   , outputHandler.GetLedStateOfOutput(0));	
 }
 
+void test_temperatureController(void)
+{
+	TEST_CHECK_(0==1, "dummy_test");
+}
+
 TEST_LIST = 
 {
     {"DigitalIOController.Initialize();", test_digital_io_controller_initialize},
@@ -248,6 +254,7 @@ TEST_LIST =
     {"UartHandler.MessageIsValid();",test_uart_handler_MessageIsValid},
     {"UartHandler.GetMessage()", test_uart_get_message}, 
     {"OutputHandler.ChangeOutput();",test_output_handler_ChangeOutput},
-    {0}
+	{"Testing the temperature controller", test_temperatureController},    
+	{0}
 };
 */

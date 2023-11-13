@@ -4,6 +4,7 @@
 #include "header/settings.hpp"
 #include "header/uart_handler.hpp"
 #include "header/output_handler.hpp"
+#include "header/temperature_monitor.hpp"
 #include <math.h>
 
 
@@ -26,8 +27,10 @@ OutputHandler outputHandler(io_1, led_1, io_2, led_2, io_3, led_3, io_4, led_4);
 SettingsHandler settingsHandler;
 
 
-io_information DHT11 {.DDR = &DDRD, .PORT = &PORTD, .PIN = &PIND, .BIT = 3};
+io_information DHT11 {.DDR = &DDRD, .PORT = &PORTD, .PIN = &PIND, .BIT = 4};
 TemperatureSensor temperatureSensor(DHT11);
+TemperatureController temperatureController(); 
+temperature_struct measuredTemperatures;
 
 typedef struct {
     uint8_t *portb_addr;
@@ -73,7 +76,6 @@ void loop()
         break; 
 
       case REQUEST_MICROCONTROLLER_TEMPERATURE:
-
         uartHanlder.SendMessage(UartOKResponse); 
         break; 
 
@@ -98,7 +100,26 @@ void loop()
     }
   }
   // Idle state! 
+  //TemperatureHandler();
+  LedBlinkHandler();
+}
+/*
+void TemperatureHandler()
+{
+  if(settingsHandler.GetFanController() == FALSE) return; 
+  if(!temperatureController.TimeToMeasure()) return; 
 
+  measuredTemperatures.CabinetTemperature = temperatureSensor.GetTemperature(); 
+  if(temperatureController.IsAboveLimits(measuredTemperatures) == true && outputHandler.GetRelayStateOfOutput(3) != 1)
+  {
+    uint8_t currentRelayState = outputHandler.GetRelayStateOfAllOutputs(); 
+    currentRelayState |= 1 << 3; 
+    outputHandler.ChangeOutput(currentRelayState, settingsHandler);
+  }
+}*/
+
+void LedBlinkHandler()
+{
   for(int i = 0; i < NUMBER_OF_OUTPUTS; i++)
   {
     if(settingsHandler.GetBlinkFrequency(i) == OFF || settingsHandler.IsEnabled(i) == FALSE)

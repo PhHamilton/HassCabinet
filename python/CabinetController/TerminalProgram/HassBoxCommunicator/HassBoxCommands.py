@@ -165,10 +165,6 @@ class HassBoxCommunicator:
 	def __getBit(self, byte, bit):
 		return (byte >> int(bit)) & 1
 
-	def __readOutputState(self):
-		self.__msg = self.serial.WriteReadBytes(REQUEST_STATE_OF_ALL_OUTPUTS, NUMBER_OF_RETURN_BYTES)
-
-
 class OutputSettings(): 
 	def __init__(self): 
 		self.__temperatureLimit = DISABLED

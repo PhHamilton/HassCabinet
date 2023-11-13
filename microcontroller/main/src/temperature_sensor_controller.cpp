@@ -2,6 +2,7 @@
 
 #define SENSOR_BYTES 40 
 #define INITIALIZATION_DELAY_IN_MS 18 
+#define MAXIMUM_LOOP_COUNTER 100000
 
 TemperatureSensor::TemperatureSensor(io_information sensorPin)
 {
@@ -26,22 +27,23 @@ double TemperatureSensor::ReadSensorData(void)
 		//_sendStartSignal(); 
 		//_waitForDHTResponse();
 		
-		pinMode(3, OUTPUT);
-		digitalWrite(3, LOW);
+		pinMode(4, OUTPUT);
+		digitalWrite(4, LOW);
 		delay(18);
-		digitalWrite(3, HIGH);
+		digitalWrite(4, HIGH);
 		delayMicroseconds(40);
-		pinMode(3, INPUT);
+		pinMode(4, INPUT);
 
-		while(digitalRead(3) == LOW){}
-		while(digitalRead(3) == HIGH){}
+	
+		while(digitalRead(4) == LOW){}
+		while(digitalRead(4) == HIGH){}
 
 		for(int i = 0; i < 40; i++)
 		{
-			while(digitalRead(3) == LOW){}
+			while(digitalRead(4) == LOW){}
 			uint64_t t = micros();
 
-			while(digitalRead(3) == HIGH){}
+			while(digitalRead(4) == HIGH){}
 
 
 			if((micros() - t) > 40)
@@ -50,10 +52,10 @@ double TemperatureSensor::ReadSensorData(void)
 				//	testVar |= 1UL << (7-i); 
 				//SET_BIT_AT_ADDRESS(&measuredData, 39-i);
 				measuredData |= 1ULL << (39-i); 
-				//Serial.print("1");
+				Serial.print("1");
 			}
-			//else
-			//	Serial.print("0");
+			else
+				Serial.print("0");
 
 			if((i+1)%8 == 0)
 				Serial.print(" ");
@@ -73,11 +75,19 @@ uint8_t TemperatureSensor::_sendStartSignal(void)
 		* MCU pulls the line low for atleast 18 ms 
 		* MCU pulls upp voltage and wait for DHT response
 	*/
+	
+
 	#ifndef NO_ARDUINO_LIBS
+	/*
 		pinMode(3, OUTPUT); 
 		digitalWrite(3, LOW); 
 		delay(18); 
 		digitalWrite(3, HIGH); 
+	*/
+		SET_BIT_AT_ADDRESS(_sensorPinInfo.DDR, _sensorPinInfo.BIT); //Output!
+		CLR_BIT_AT_ADDRESS(_sensorPinInfo.PORT, _sensorPinInfo.BIT);
+		delay(18);
+		SET_BIT_AT_ADDRESS(_sensorPinInfo.PORT, _sensorPinInfo.BIT);
 	#endif
 	return 0; 
 }
@@ -89,11 +99,18 @@ uint8_t TemperatureSensor::_waitForDHTResponse(void)
 		* MCU pulls upp voltage for 80 us
 	*/
 	#ifndef NO_ARDUINO_LIBS
+	/*
 		delayMicroseconds(40);
 		pinMode(3, INPUT); 
 		//while(digitalRead(sensorPin) == HIGH); 
 		while(digitalRead(3) == LOW); 
 		while(digitalRead(3) == HIGH)
+	*/
+	delayMicroseconds(40);
+	CLR_BIT_AT_ADDRESS(_sensorPinInfo.DDR, _sensorPinInfo.BIT); //INPUT!
+	while(GET_BIT_AT_ADDRESS(_sensorPinInfo.PIN, _sensorPinInfo.BIT) == LOW){}
+	while(GET_BIT_AT_ADDRESS(_sensorPinInfo.PIN, _sensorPinInfo.BIT) == HIGH){}
+
 	#endif
 	return 0; 
 }

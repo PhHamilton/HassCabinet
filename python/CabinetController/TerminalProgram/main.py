@@ -31,9 +31,9 @@ if(DISABLE_SERIAL == False):
 else: 
     currentOutputState = 0x5 
     currentSettings = 0x3
-    currentOutputSettings.append(0x0)    
-    currentOutputSettings.append(0x0)    
-    currentOutputSettings.append(0x0)    
+    currentOutputSettings.append(0x1)    
+    currentOutputSettings.append(0x2)    
+    currentOutputSettings.append(0x3)    
     currentOutputSettings.append(0x0)    
 
 
@@ -98,8 +98,9 @@ while(keyPress != 'q'):
                 communicator.ClearMessage()
                 sendMsg = False
                 
-                for i in range(4):
-                    menu.SetMenuOption(communicator.GetSettings(i), i) 
+                #for i in range(4):
+                    #pass
+                    #menu.SetMenuOpion(communicator.GetSettings(i), i) 
                 continue
             else:  
                 if(keyPress == '0'): 
